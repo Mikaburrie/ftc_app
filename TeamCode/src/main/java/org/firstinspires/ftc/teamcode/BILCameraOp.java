@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.ftcrobotcontroller.opmodes.BILCameraPreview;
 import com.qualcomm.ftcrobotcontroller.FtcRobotControllerActivity;
