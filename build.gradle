@@ -5,11 +5,17 @@
  */
 buildscript {
     repositories {
-        jcenter()
+        jcenter ()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.3'
     }
 }
 
+// Added by IGN on 10/13/2016 to get junit to work.
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
 
