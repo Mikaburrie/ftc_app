@@ -13,7 +13,6 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
  */
 public abstract class BILAutonomousCommon extends OpMode {
 
-    DcMotorController.DeviceMode devMode;
     DcMotorController wheelController;
     DcMotor motorRight;
     DcMotor motorLeft;
@@ -49,6 +48,7 @@ public abstract class BILAutonomousCommon extends OpMode {
         //claw = hardwareMap.servo.get("servo_1");
         gyroSensor.calibrate();
         speedContainer = new SpeedContainer();
+
     }
 
     //
@@ -87,7 +87,6 @@ public abstract class BILAutonomousCommon extends OpMode {
         telemetry.addData("Gyro Heading", String.format("%03d", gyroSensor.getHeading()));
         telemetry.addData("left motor", motorLeft.getCurrentPosition());
         telemetry.addData("right motor", motorRight.getCurrentPosition());
-        telemetry.addData("wheel controller", wheelController.getMotorControllerDeviceMode());
         telemetry.addData("RunMode: ", motorLeft.getMode().toString());
     }
 
@@ -259,8 +258,9 @@ public abstract class BILAutonomousCommon extends OpMode {
     public void resetDriveEncoder(DcMotor motorType)
 
     {
+        DcMotor.RunMode runMode = this.wheelController.getMotorMode(motorType.getPortNumber());
         if (motorType != null) {
-            motorType.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+            motorType.setMode(runMode.RESET_ENCODERS);
         }
 
     } // resetRightDriveEncoder
