@@ -258,8 +258,9 @@ public abstract class BILAutonomousCommon extends OpMode {
     public void resetDriveEncoder(DcMotor motorType)
 
     {
-        DcMotor.RunMode runMode = this.wheelController.getMotorMode(motorType.getPortNumber());
+
         if (motorType != null) {
+            DcMotor.RunMode runMode = this.wheelController.getMotorMode(motorType.getPortNumber());
             motorType.setMode(runMode.RESET_ENCODERS);
         }
 
@@ -295,7 +296,8 @@ public abstract class BILAutonomousCommon extends OpMode {
 
     {
         if (motorType != null) {
-            motorType.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+            DcMotor.RunMode runMode = this.wheelController.getMotorMode(motorType.getPortNumber());
+            motorType.setMode(runMode.RUN_USING_ENCODERS);
         }
 
     } //
@@ -330,8 +332,10 @@ public abstract class BILAutonomousCommon extends OpMode {
 
     {
         if (motorType != null) {
-            if (motorType.getMode() == DcMotorController.RunMode.RESET_ENCODERS) {
-                motorType.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+            DcMotor.RunMode runMode = this.wheelController.getMotorMode(motorType.getPortNumber());
+            if (motorType.getMode() == runMode.RESET_ENCODERS) {
+
+                motorType.setMode(runMode.RUN_WITHOUT_ENCODERS);
             }
         }
 
