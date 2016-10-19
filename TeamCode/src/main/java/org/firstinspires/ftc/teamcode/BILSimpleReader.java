@@ -13,13 +13,14 @@ import java.util.Set;
  */
 public class BILSimpleReader extends OpMode
 {
-    DcMotorController.DeviceMode devMode;
+   //  DcMotorController.DeviceMode devMode;
     DcMotorController wheelController;
     DcMotor motorRight;
     DcMotor motorLeft;
 
     @Override public void init ()
     {
+        /* IGN Commented out so that 2016-2017 code base works.
         motorRight = hardwareMap.dcMotor.get("motor_2");
         motorLeft = hardwareMap.dcMotor.get("motor_1");
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -31,6 +32,7 @@ public class BILSimpleReader extends OpMode
             System.out.println("Entry key:" + entry.getKey());
             System.out.println("Entry value:" + entry.getValue());
         }
+        */
     }
 
     @Override public void loop ()
@@ -38,7 +40,7 @@ public class BILSimpleReader extends OpMode
         telemetry.addData("Text", "free flow text");
         telemetry.addData("left motor", motorLeft.getPower());
         telemetry.addData("right motor", motorRight.getPower());
-        telemetry.addData("wheel controller", wheelController.getMotorControllerDeviceMode());
+        // telemetry.addData("wheel controller", wheelController.getMotorControllerDeviceMode());
         telemetry.addData("RunMode: ", motorLeft.getMode().toString());
         telemetry.addData("motor left current position", motorLeft.getCurrentPosition());
         telemetry.addData("motor left current position", motorRight.getCurrentPosition());

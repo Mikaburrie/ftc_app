@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import org.firstinspires.ftc.teamcode.BILCameraPreview;
-import org.firstinspires.ftc.robotcontroller.internal.testcode.FtcRobotControllerActivity;
+// import org.firstinspires.ftc.robotcontroller.internal.testcode.FtcRobotControllerActivity;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import java.io.ByteArrayOutputStream;
 
@@ -63,6 +63,7 @@ public class BILCameraOp extends OpMode {
      */
     @Override
     public void init() {
+        /* IGN: Commented out so that compilation works for 2016-2017 code base
         camera = ((FtcRobotControllerActivity)hardwareMap.appContext).camera;
         camera.setPreviewCallback(previewCallback);
 
@@ -70,6 +71,7 @@ public class BILCameraOp extends OpMode {
         data = parameters.flatten();
 
         ((FtcRobotControllerActivity) hardwareMap.appContext).initPreview(camera, this, previewCallback);
+        */
     }
 
     /*
