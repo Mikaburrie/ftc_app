@@ -46,7 +46,7 @@ public class BILTeleOpJoystickTest {
 
         // Set up
         double [] scaleDval = {-1, -.49, -.25, -.09, 0, .09, .25, .49, 1};
-        double [] expectedValue = {-.9975, -.4725, -.21, -.042, 0, .042, .21, .4725, 1};
+        double [] expectedValue = {-.9975, -.462, -.21, -.042, 0, .042, .21, .462, 1};
 
         for (int idx = 0; idx < scaleDval.length; idx ++) {
             //Run test
