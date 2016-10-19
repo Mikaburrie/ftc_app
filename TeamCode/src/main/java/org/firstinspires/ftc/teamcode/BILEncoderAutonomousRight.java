@@ -133,6 +133,6 @@ public class BILEncoderAutonomousRight extends BILAutonomousCommon
         System.out.println("left motor: " + motorLeft.getCurrentPosition());
         System.out.println("right motor: " + motorRight.getCurrentPosition());
         System.out.println("encoders mode: " + motorLeft.getMode());
-        System.out.println("wheel controller: " + wheelController.getMotorControllerDeviceMode());
+        // System.out.println("wheel controller: " + wheelController.getMotorControllerDeviceMode());
     }
 }
