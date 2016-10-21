@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Created by mikab_000 on 10/20/2016.
  */
 @Autonomous(name="BIL: Auto Drive By Time", group="BIL")
-@Disabled
+//@Disabled
 public class BILTimedAutonomousLinear extends LinearOpMode {
     /* Declare OpMode members. */
     BILRobotHardware robot      = new BILRobotHardware();   // Use BIL Robot's hardware
