@@ -38,11 +38,11 @@ public class BILTeleOpJoystick {
         return  fixedD;
     }
 
-    double scaleToSpeed(double scaleD, float speedLimit) {
+    double scaleToSpeed(double scaleD, double speedLimit) {
         return scaleD * speedLimit;
     }
 
-    public double normalizeSpeed(double dVal, double expo, float maxSpeed)
+    public double normalizeSpeed(double dVal, double expo, double maxSpeed)
     {
         double scaleD = scaleInput(dVal, expo);
     //    double fixedD = deadFix(scaleD, .05, 1.05);

@@ -32,10 +32,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
-import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -43,37 +41,24 @@ import com.qualcomm.robotcore.util.Range;
  * <p>
  * Enables control of the robot via the gamepad
  */
+
+@TeleOp(name="BIL: Test Teleop", group="BIL")
 public class BILTeleOp extends OpMode {
 
-	/*
-	 * Note: the configuration of the servos is such that
-	 * as the arm servo approaches 0, the arm position moves up (away from the floor).
-	 * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
-	 */
-	// TETRIX VALUES.
 
-	DcMotor motorRight;
-	DcMotor motorLeft;
-	DcMotor motorClaw;
-	Servo hookTurner;
-	TouchSensor armInButton;
-	TouchSensor armOutButton;
-	UltrasonicSensor distanceSensor;
+	DcMotor motorFrontRight;
+	DcMotor motorBackRight;
+	DcMotor motorFrontLeft;
+	DcMotor motorBackLeft;
 
 	boolean directionRobot = true;
-	double hookPosition = 0.0;
-	double low = 0.0;
-	double middle = 0.5;
-	double high = 0.9; // 1/12/15 See if the direction of servo movement can be changed
-	float maxSpeed = 7/10; // 7/10 is a float, 0.7 is a double
-	float maxArmSpeed = 1/2; // 1/2 is a float, 0.5 is a double
-	int overdrive = 1;
+	double maxSpeed = 0.7;
 	BILTeleOpJoystick bilTeleOpJoystick;
 	/**
 	 * Constructor
 	 */
 	public BILTeleOp() {
-	bilTeleOpJoystick = new BILTeleOpJoystick();
+		bilTeleOpJoystick = new BILTeleOpJoystick();
 	}
 
 	/*
@@ -101,20 +86,22 @@ public class BILTeleOp extends OpMode {
 		 *    "servo_1" controls the arm joint of the manipulator.
 		 *    "servo_6" controls the claw joint of the manipulator.
 		 */
-		motorRight = hardwareMap.dcMotor.get("motor_2");
-		motorLeft = hardwareMap.dcMotor.get("motor_1");
 
-		motorClaw = hardwareMap.dcMotor.get("motor_3");
+		//Left_Front, Left_Back, Right_Front, Right_Back
+		motorFrontRight = hardwareMap.dcMotor.get("Right_Front");
+		motorBackRight = hardwareMap.dcMotor.get("Right_Back");
+		motorFrontLeft = hardwareMap.dcMotor.get("Left_Front");
+		motorBackLeft = hardwareMap.dcMotor.get("Left_Back");
+
+		//motorClaw = hardwareMap.dcMotor.get("motor_3");
 		//motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
-		hookTurner = hardwareMap.servo.get("servo_2");
+		//hookTurner = hardwareMap.servo.get("servo_2");
 
-		armInButton = hardwareMap.touchSensor.get("button_1");
-		armOutButton = hardwareMap.touchSensor.get("button_2");
+		//armInButton = hardwareMap.touchSensor.get("button_1");
+		//armOutButton = hardwareMap.touchSensor.get("button_2");
 
-		distanceSensor = hardwareMap.ultrasonicSensor.get("ultrasonic_1");
-
-		hookPosition = high;
+		//distanceSensor = hardwareMap.ultrasonicSensor.get("ultrasonic_1");
 
 		// assign the starting position of the wrist and claw
 
@@ -139,25 +126,31 @@ public class BILTeleOp extends OpMode {
 		// 1 is full down
 		// direction: left_stick_x ranges from -1 to 1, where -1 is full left
 		// and 1 is full right
-		float throttle = -gamepad1.left_stick_y;
+		float throttleY = -gamepad1.left_stick_y;
+		float throttleX = gamepad1.left_stick_x;
 		float direction = gamepad1.right_stick_x;
-		float clawArmCommand = gamepad2.left_stick_y;
+		//float clawArmCommand = gamepad2.left_stick_y;
 
 
 		// scale the joystick value to make it easier to control
 		// the robot more precisely at slower speeds.
-		throttle = (float)bilTeleOpJoystick.normalizeSpeed(throttle, 2.0, maxSpeed);
+		throttleY = (float)bilTeleOpJoystick.normalizeSpeed(throttleY, 2.0, maxSpeed);
+		throttleX = (float)bilTeleOpJoystick.normalizeSpeed(throttleX, 2.0, maxSpeed);
 		direction =  (float)bilTeleOpJoystick.normalizeSpeed(direction, 2.0, maxSpeed);
-		clawArmCommand = (float)bilTeleOpJoystick.normalizeSpeed(clawArmCommand, 2.0, maxSpeed);
+		//clawArmCommand = (float)bilTeleOpJoystick.normalizeSpeed(clawArmCommand, 2.0, maxSpeed);
 
-		float right = throttle - direction;
-		float left = throttle + direction;
+		float frontRight = throttleY - throttleX;
+		float backRight = throttleY + throttleX;
+		float frontLeft = throttleY + throttleX;
+		float backLeft = throttleY - throttleX;
 
 		// clip the right/left values so that the values never exceed +/- whatever you set it to
-		right = Range.clip(right, -maxSpeed, maxSpeed);
-		left = Range.clip(left, -maxSpeed, maxSpeed);
-		clawArmCommand = Range.clip(clawArmCommand, -maxArmSpeed, maxArmSpeed * overdrive);
-
+		frontRight = Range.clip(frontRight, (float)-maxSpeed, (float)maxSpeed);
+		backRight = Range.clip(backRight, (float)-maxSpeed, (float)maxSpeed);
+		frontLeft = Range.clip(frontLeft, (float)-maxSpeed, (float)maxSpeed);
+		backLeft = Range.clip(backLeft, (float)-maxSpeed, (float)maxSpeed);
+		//clawArmCommand = Range.clip(clawArmCommand, -maxArmSpeed, maxArmSpeed * overdrive);
+		/*
 		//checks for claw arm button and keeps string from snapping
 		if(armInButton.isPressed() && -gamepad2.left_stick_y < 0){
 			clawArmCommand = 0;
@@ -166,12 +159,14 @@ public class BILTeleOp extends OpMode {
 		if(armOutButton.isPressed() && -gamepad2.left_stick_y > 0 ){
 			clawArmCommand = 0;
 		}
-
+		*/
 		// write the values to the motors
-		motorRight.setPower(right);
-		motorLeft.setPower(left);
-		motorClaw.setPower(clawArmCommand);
-
+		motorFrontRight.setPower(frontRight);
+		motorBackRight.setPower(backRight);
+		motorFrontLeft.setPower(frontLeft);
+		motorBackLeft.setPower(backLeft);
+		//motorClaw.setPower(clawArmCommand);
+		/*
 		// update the position of the arm.
 		if (gamepad2.dpad_left || gamepad2.dpad_right) {
 			// if the A button is pushed on gamepad1, increment the position of
@@ -206,7 +201,7 @@ public class BILTeleOp extends OpMode {
 		}
 		// write position values to the wrist and claw servo
 		hookTurner.setPosition(hookPosition);
-
+		*/
 
 
 
@@ -216,13 +211,13 @@ public class BILTeleOp extends OpMode {
 		 * will return a null value. The legacy NXT-compatible motor controllers
 		 * are currently write only.
 		 */
-        telemetry.addData("Text", "*** Robot Data***");
+		telemetry.addData("Text", "*** Robot Data***");
 		telemetry.addData("F/R", "direction:  " + String.format("%b",directionRobot ));
-		telemetry.addData("left tgt pwr", "left  pwr: " + String.format("%.2f", left));
-		telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
-		telemetry.addData("Fully extend arm sensor", String.format("%b", armOutButton.isPressed()));
-		telemetry.addData("Fully in arm sensor", String.format("%b", armInButton.isPressed()));
-		telemetry.addData("Ultrasonic value(cm)", String.format("%.2f", (float)distanceSensor.getUltrasonicLevel()));
+		telemetry.addData("left tgt pwr", "left  pwr: " + String.format("%.2f", frontLeft));
+		telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", frontRight));
+		//telemetry.addData("Fully extend arm sensor", String.format("%b", armOutButton.isPressed()));
+		//telemetry.addData("Fully in arm sensor", String.format("%b", armInButton.isPressed()));
+		//telemetry.addData("Ultrasonic value(cm)", String.format("%.2f", (float)distanceSensor.getUltrasonicLevel()));
 	}
 
 	/*
