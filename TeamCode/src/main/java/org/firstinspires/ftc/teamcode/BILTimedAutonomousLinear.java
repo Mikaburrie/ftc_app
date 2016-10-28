@@ -40,10 +40,7 @@ public class BILTimedAutonomousLinear extends LinearOpMode {
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
 
         // Step 1:  Drive forward for 3 seconds
-        robot.motorFrontRight.setPower(FORWARD_SPEED);
-        robot.motorBackRight.setPower(FORWARD_SPEED);
-        robot.motorFrontLeft.setPower(FORWARD_SPEED);
-        robot.motorBackLeft.setPower(FORWARD_SPEED);
+        robot.setAllDriveMotors(FORWARD_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 3.0)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
@@ -52,10 +49,7 @@ public class BILTimedAutonomousLinear extends LinearOpMode {
         }
 
         // Step 2:  Spin right for 1.3 seconds
-        robot.motorFrontRight.setPower(-TURN_SPEED);
-        robot.motorBackRight.setPower(-TURN_SPEED);
-        robot.motorFrontLeft.setPower(TURN_SPEED);
-        robot.motorBackLeft.setPower(TURN_SPEED);
+        robot.setDriveMotors(TURN_SPEED, TURN_SPEED, -TURN_SPEED, -TURN_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 1.3)) {
             telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
@@ -64,10 +58,7 @@ public class BILTimedAutonomousLinear extends LinearOpMode {
         }
 
         // Step 3:  Drive Backwards for 1 Second
-        robot.motorFrontRight.setPower(-FORWARD_SPEED);
-        robot.motorBackRight.setPower(-FORWARD_SPEED);
-        robot.motorFrontLeft.setPower(-FORWARD_SPEED);
-        robot.motorBackLeft.setPower(-FORWARD_SPEED);
+        robot.setAllDriveMotors(-FORWARD_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 1.0)) {
             telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
@@ -76,10 +67,7 @@ public class BILTimedAutonomousLinear extends LinearOpMode {
         }
 
         // Step 4:  Stop and close the claw.
-        robot.motorFrontRight.setPower(0);
-        robot.motorBackRight.setPower(0);
-        robot.motorFrontLeft.setPower(0);
-        robot.motorBackLeft.setPower(0);
+        robot.setAllDriveMotors(0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

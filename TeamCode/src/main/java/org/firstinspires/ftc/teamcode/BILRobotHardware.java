@@ -35,8 +35,8 @@ public class BILRobotHardware {
         motorBackRight = hwMap.dcMotor.get("Right_Back");
         motorFrontLeft = hwMap.dcMotor.get("Left_Front");
         motorBackLeft = hwMap.dcMotor.get("Left_Back");
-    //    leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-    //    rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
+        motorBackRight  .setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         motorFrontRight.setPower(0);
@@ -50,6 +50,30 @@ public class BILRobotHardware {
         motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    /**
+     *
+     * @param frontLeft Power for front left wheel.
+     * @param backLeft Power for back left wheel.
+     * @param frontRight Power for front right wheel.
+     * @param backRight Power for back right wheel.
+     */
+    public void setDriveMotors(double frontLeft, double backLeft, double frontRight, double backRight) {
+        motorFrontLeft.setPower(frontLeft);
+        motorBackLeft.setPower(backLeft);
+        motorFrontRight.setPower(frontRight);
+        motorBackRight.setPower(backRight);
+    }
+
+    /**
+     * @param power The power to set for all drive motors.
+     */
+    public void setAllDriveMotors(double power) {
+        motorFrontLeft.setPower(power);
+        motorBackLeft.setPower(power);
+        motorFrontRight.setPower(power);
+        motorBackRight.setPower(power);
     }
 
     /***
