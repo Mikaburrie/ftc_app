@@ -36,6 +36,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+
 /**
  * TeleOp Mode
  * <p>
@@ -45,11 +47,7 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name="BIL: Test Teleop", group="BIL")
 public class BILTeleOp extends OpMode {
 
-
-	DcMotor motorFrontRight;
-	DcMotor motorBackRight;
-	DcMotor motorFrontLeft;
-	DcMotor motorBackLeft;
+	BILRobotHardware robot = new BILRobotHardware(); // use the class created to define a Pushbot's hardware
 
 	double frontRight;
 	double frontLeft;
@@ -93,10 +91,7 @@ public class BILTeleOp extends OpMode {
 		 */
 
 		//Left_Front, Left_Back, Right_Front, Right_Back
-		motorFrontRight = hardwareMap.dcMotor.get("Right_Front");
-		motorBackRight = hardwareMap.dcMotor.get("Right_Back");
-		motorFrontLeft = hardwareMap.dcMotor.get("Left_Front");
-		motorBackLeft = hardwareMap.dcMotor.get("Left_Back");
+		robot.init(hardwareMap);
 
 		//motorClaw = hardwareMap.dcMotor.get("motor_3");
 		//motorLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -159,10 +154,7 @@ public class BILTeleOp extends OpMode {
 		}
 		*/
 		// write the values to the motors
-		motorFrontRight.setPower(frontRight);
-		motorBackRight.setPower(backRight);
-		motorFrontLeft.setPower(frontLeft);
-		motorBackLeft.setPower(backLeft);
+		robot.setDriveMotors(frontLeft, backLeft, frontRight, backRight);
 		//motorClaw.setPower(clawArmCommand);
 		/*
 		// update the position of the arm.
@@ -216,6 +208,7 @@ public class BILTeleOp extends OpMode {
 		//telemetry.addData("Fully extend arm sensor", String.format("%b", armOutButton.isPressed()));
 		//telemetry.addData("Fully in arm sensor", String.format("%b", armInButton.isPressed()));
 		//telemetry.addData("Ultrasonic value(cm)", String.format("%.2f", (float)distanceSensor.getUltrasonicLevel()));
+		telemetry.update();
 	}
 
 	/*
