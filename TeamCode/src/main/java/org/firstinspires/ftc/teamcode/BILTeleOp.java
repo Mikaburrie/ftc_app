@@ -51,6 +51,11 @@ public class BILTeleOp extends OpMode {
 	DcMotor motorFrontLeft;
 	DcMotor motorBackLeft;
 
+	double frontRight;
+	double frontLeft;
+	double backRight;
+	double backLeft;
+
 	boolean directionRobot = true;
 	double maxSpeed = 0.7;
 	BILTeleOpJoystick bilTeleOpJoystick;
@@ -126,29 +131,22 @@ public class BILTeleOp extends OpMode {
 		// 1 is full down
 		// direction: left_stick_x ranges from -1 to 1, where -1 is full left
 		// and 1 is full right
-		float throttleY = -gamepad1.left_stick_y;
-		float throttleX = gamepad1.left_stick_x;
-		float direction = gamepad1.right_stick_x;
+		double throttleY = (double)-gamepad1.left_stick_y;
+		double throttleX = (double)gamepad1.left_stick_x;
+		double turning = (double)gamepad1.right_stick_x;
 		//float clawArmCommand = gamepad2.left_stick_y;
 
 
 		// scale the joystick value to make it easier to control
 		// the robot more precisely at slower speeds.
-		throttleY = (float)bilTeleOpJoystick.normalizeSpeed(throttleY, 2.0, maxSpeed);
-		throttleX = (float)bilTeleOpJoystick.normalizeSpeed(throttleX, 2.0, maxSpeed);
-		direction =  (float)bilTeleOpJoystick.normalizeSpeed(direction, 2.0, maxSpeed);
+		throttleY = bilTeleOpJoystick.normalizeSpeed(throttleY, 2.0, maxSpeed);
+		throttleX = bilTeleOpJoystick.normalizeSpeed(throttleX, 2.0, maxSpeed);
+		turning = bilTeleOpJoystick.normalizeSpeed(turning, 2.0, maxSpeed);
 		//clawArmCommand = (float)bilTeleOpJoystick.normalizeSpeed(clawArmCommand, 2.0, maxSpeed);
 
-		float frontRight = throttleY - throttleX;
-		float backRight = throttleY + throttleX;
-		float frontLeft = throttleY + throttleX;
-		float backLeft = throttleY - throttleX;
+		setMeccanumMotors(throttleX, throttleY, turning);
 
 		// clip the right/left values so that the values never exceed +/- whatever you set it to
-		frontRight = Range.clip(frontRight, (float)-maxSpeed, (float)maxSpeed);
-		backRight = Range.clip(backRight, (float)-maxSpeed, (float)maxSpeed);
-		frontLeft = Range.clip(frontLeft, (float)-maxSpeed, (float)maxSpeed);
-		backLeft = Range.clip(backLeft, (float)-maxSpeed, (float)maxSpeed);
 		//clawArmCommand = Range.clip(clawArmCommand, -maxArmSpeed, maxArmSpeed * overdrive);
 		/*
 		//checks for claw arm button and keeps string from snapping
@@ -230,4 +228,15 @@ public class BILTeleOp extends OpMode {
 
 	}
 
+	protected void setMeccanumMotors(double leftX, double leftY, double rightX) {
+		frontRight = leftY - leftX - rightX;
+		backRight = leftY + leftX - rightX;
+		frontLeft = leftY + leftX + rightX;
+		backLeft = leftY - leftX + rightX;
+
+		frontRight = Range.clip(frontRight, -maxSpeed, maxSpeed);
+		backRight = Range.clip(backRight, -maxSpeed, maxSpeed);
+		frontLeft = Range.clip(frontLeft, -maxSpeed, maxSpeed);
+		backLeft = Range.clip(backLeft, -maxSpeed, maxSpeed);
+	}
 }
