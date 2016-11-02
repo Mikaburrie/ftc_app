@@ -222,10 +222,10 @@ public class BILTeleOp extends OpMode {
 	}
 
 	protected void setMeccanumMotors(double leftX, double leftY, double rightX) {
-		frontRight = leftY - leftX - rightX;
-		backRight = leftY + leftX - rightX;
-		frontLeft = leftY + leftX + rightX;
-		backLeft = leftY - leftX + rightX;
+		frontRight = leftY + leftX + rightX;
+		backRight = leftY - leftX + rightX;
+		frontLeft = leftY + leftX - rightX;
+		backLeft = leftY - leftX - rightX;
 
 		frontRight = Range.clip(frontRight, -maxSpeed, maxSpeed);
 		backRight = Range.clip(backRight, -maxSpeed, maxSpeed);
