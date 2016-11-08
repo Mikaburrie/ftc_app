@@ -61,7 +61,6 @@ public class BILCameraPreview extends SurfaceView implements SurfaceHolder.Callb
         } catch (Exception e){
             // ignore: tried to stop a non-existent preview
         }
-
         // set preview size and make any resize, rotate or
         // reformatting changes here
 

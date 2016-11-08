@@ -17,9 +17,7 @@ public class SpeedContainer {
         return leftSpeed;
     }
 
-    public void setLeftSpeed(double leftSpeed) {
-        this.leftSpeed = leftSpeed;
-    }
+    public void setLeftSpeed(double leftSpeed) { this.leftSpeed = leftSpeed; }
 
     public double getRightSpeed() {
         return rightSpeed;

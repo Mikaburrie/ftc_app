@@ -5,7 +5,7 @@ package org.firstinspires.ftc.teamcode;
  * Added deadBand
  * Adjusts control of the robot via the gamepad joystick
  */
-public class BILTeleOpJoystick {
+public class    BILTeleOpJoystick {
     /*
          * This is a reworked version of the method scaleInput.
          * This version replaces arrays with an exponential function,
