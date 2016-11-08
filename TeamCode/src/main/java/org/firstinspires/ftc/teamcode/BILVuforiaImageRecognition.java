@@ -24,7 +24,7 @@ import java.util.List;
  * Created by mikab_000 on 11/3/2016.
  */
 
-@Autonomous(name="BIL: Vuforia Navigation", group="BIL")
+@Autonomous(name="BIL: Vuforia Image Recognition", group="BIL")
 public class BILVuforiaImageRecognition extends LinearOpMode {
 
     VuforiaLocalizer vuforia;
@@ -47,13 +47,7 @@ public class BILVuforiaImageRecognition extends LinearOpMode {
         imageTargets.get(2).setName("Legos"); //third is legos
         imageTargets.get(3).setName("Gears"); //fourth is gears
 
-        imageTargets.get(0).setLocation(createMatrix(0, 0, 0, 0, 0, 0));
-
-
-
-
-
-
+    //     imageTargets.get(0).setLocation(createMatrix(0, 0, 0, 0, 0, 0));
 
         waitForStart(); //waits for the op mode to be started
 
@@ -68,7 +62,7 @@ public class BILVuforiaImageRecognition extends LinearOpMode {
 
                     telemetry.addData(beaconImage.getName() + " - Translation", translation);
 
-                    double degreesToTurn = Math.toDegrees(Math.atan2(translation.get(1), translation.get(2))); //vertical phone
+                    double degreesToTurn = Math.toDegrees(Math.atan2(translation.get(1), translation.get(0))) - 90; //vertical phone
 
                     telemetry.addData(beaconImage.getName() + " - Degrees", degreesToTurn);
                 } else {
@@ -92,7 +86,8 @@ k
         float mmFTCFieldWidth  = (12*12 - 2) * mmPerInch;   // the FTC field is ~11'10" center-to-center of the glass panels
 
         */
-        }
+    }
+
     public OpenGLMatrix createMatrix(float x, float y, float z, float u, float v, float w){
 
 
