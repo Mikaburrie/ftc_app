@@ -53,18 +53,23 @@ public class BILVuforiaImageRecognition extends LinearOpMode {
 
         imageTargets.activate(); //activate the tracking of the image targets once the opmode starts
 
-        while(opModeIsActive()){ //when the op mode is active
+        while(opModeIsActive()) { //when the op mode is active
             for(VuforiaTrackable beaconImage : imageTargets){ //loop throught all of the trackables
                 OpenGLMatrix position = ((VuforiaTrackableDefaultListener) beaconImage.getListener()).getPose(); //get positions
 
-                if(position != null){ //if we see the object we are looking for
+                if(position != null) { //if we see the object we are looking for
                     VectorF translation = position.getTranslation();
 
                     telemetry.addData(beaconImage.getName() + " - Translation", translation);
 
                     double degreesToTurn = Math.toDegrees(Math.atan2(translation.get(1), translation.get(0))) - 90; //vertical phone
 
-                    telemetry.addData(beaconImage.getName() + " - Degrees", degreesToTurn);
+                    if(Math.abs(degreesToTurn) < 15) {
+                        telemetry.addData(beaconImage.getName() + " - Move", translation.get(2));
+                    } else {
+                        telemetry.addData(beaconImage.getName() + " - Degrees", degreesToTurn);
+                    }
+
                 } else {
                     telemetry.addData(beaconImage.getName(), "Not In View"); // if not in view it will print "Not in view"
                 }
