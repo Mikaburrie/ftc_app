@@ -203,8 +203,10 @@ public class BILTeleOp extends OpMode {
 		 */
 		telemetry.addData("Text", "*** Robot Data***");
 		telemetry.addData("F/R", "direction:  " + String.format("%b",directionRobot ));
-		telemetry.addData("left tgt pwr", "left  pwr: " + String.format("%.2f", frontLeft));
-		telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", frontRight));
+		telemetry.addData("FrontLeft Power", String.format("%.2f", frontLeft));
+		telemetry.addData("BackLeft Power", String.format("%.2f", backLeft));
+		telemetry.addData("FrontRight Power", String.format("%.2f", frontRight));
+		telemetry.addData("BackRight Power", String.format("%.2f", backRight));
 		//telemetry.addData("Fully extend arm sensor", String.format("%b", armOutButton.isPressed()));
 		//telemetry.addData("Fully in arm sensor", String.format("%b", armInButton.isPressed()));
 		//telemetry.addData("Ultrasonic value(cm)", String.format("%.2f", (float)distanceSensor.getUltrasonicLevel()));
@@ -222,10 +224,10 @@ public class BILTeleOp extends OpMode {
 	}
 
 	protected void setMeccanumMotors(double leftX, double leftY, double rightX) {
-		frontRight = leftY + leftX + rightX;
-		backRight = leftY - leftX + rightX;
-		frontLeft = leftY + leftX - rightX;
-		backLeft = leftY - leftX - rightX;
+		frontRight = leftY - leftX - rightX;
+		backRight = leftY + leftX - rightX;
+		frontLeft = leftY + leftX + rightX;
+		backLeft = leftY - leftX + rightX;
 
 		frontRight = Range.clip(frontRight, -maxSpeed, maxSpeed);
 		backRight = Range.clip(backRight, -maxSpeed, maxSpeed);
