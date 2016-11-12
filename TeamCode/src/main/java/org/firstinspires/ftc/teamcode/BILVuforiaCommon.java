@@ -5,12 +5,18 @@ import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.internal.VuforiaTrackablesImpl;
+
+import java.util.Arrays;
 
 /**
  * Created by mikab_000 on 11/10/2016.
  */
 public class BILVuforiaCommon {
+
+    VuforiaLocalizer vuforia;
 
     public VuforiaLocalizer initVuforia(boolean cameraPreview, int maxTrackables) {
         //Sets up camera and initializes vuforia.
@@ -26,12 +32,12 @@ public class BILVuforiaCommon {
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK; //uses the back camera(higher resolution)
         parameters.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES;
         parameters.useExtendedTracking = false;
-        VuforiaLocalizer vuforia = ClassFactory.createVuforiaLocalizer(parameters); //creates new vuforia class with parameters
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters); //creates new vuforia class with parameters
         Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, maxTrackables); //the max amound of image targets we are looking for
         return vuforia;
     }
 
-    public VuforiaTrackables loadTargets(VuforiaLocalizer vuforia, String file, String... names) {
+    public VuforiaTrackables loadTargets(String file, String... names) {
         VuforiaTrackables imageTargets = vuforia.loadTrackablesFromAsset(file); //gets the targets from assets
         int i = 0;
         for(String name : names) {
@@ -39,5 +45,23 @@ public class BILVuforiaCommon {
             i++;
         }
         return imageTargets;
+    }
+
+    public VuforiaTrackables loadRedTargets() {
+        VuforiaTrackables targets = this.loadTargets("FTC_2016-17", "Wheels", "Tools", "Legos", "Gears");
+
+        targets.remove(2); //removes gears and tools
+        targets.remove(0);
+
+        return targets;
+    }
+
+    public VuforiaTrackables loadBlueTargets() {
+        VuforiaTrackables targets = this.loadTargets("FTC_2016-17", "Wheels", "Tools", "Legos", "Gears");
+
+        targets.remove(3); //removes gears and tools
+        targets.remove(1);
+
+        return targets;
     }
 }
