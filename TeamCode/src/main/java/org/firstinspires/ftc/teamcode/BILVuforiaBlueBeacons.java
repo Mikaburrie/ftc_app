@@ -41,12 +41,12 @@ public class BILVuforiaBlueBeacons extends LinearOpMode {
                 double yTrans = (double)translation.get(0);
                 double zTrans = (double)translation.get(2);
 
-                double degreesToTurn = Math.toDegrees(Math.atan2(xTrans, zTrans)); //vertical phone
+                double degreesToTurn = Math.toDegrees(Math.atan2(zTrans, xTrans)) + 90; //vertical phone
 
                 telemetry.addData(beaconImage.getName() + " - Translation", translation);
                 telemetry.addData(beaconImage.getName() + " - Degrees", degreesToTurn);
 
-                if(Math.abs(zTrans) > 250) {
+                if(Math.abs(zTrans) > 500) {
                     double leftSpeed = (40 + (degreesToTurn/4))/100;
                     double rightSpeed = (40 - (degreesToTurn/4))/100;
                     robot.setDriveMotors(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
@@ -56,6 +56,7 @@ public class BILVuforiaBlueBeacons extends LinearOpMode {
 
             } else {
                 telemetry.addData(beaconImage.getName(), "Not In View"); // if not in view it will print "Not in view"
+                robot.setAllDriveMotors(50);
             }
             telemetry.update();
         }
