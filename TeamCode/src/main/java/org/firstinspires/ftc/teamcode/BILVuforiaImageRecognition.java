@@ -28,6 +28,8 @@ import java.util.List;
 public class BILVuforiaImageRecognition extends LinearOpMode {
 
     VuforiaLocalizer vuforia;
+    BILVuforiaCommon helper;
+    BILRobotHardware robot = new BILRobotHardware();
 
     @Override public void runOpMode() throws InterruptedException {
         //Sets up camera and initializes vuforia.
@@ -39,6 +41,7 @@ public class BILVuforiaImageRecognition extends LinearOpMode {
         parameters.useExtendedTracking = false;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters); //creates new vuforia class with parameters
         Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4); //the max amound of image targets we are looking for
+    //    this.vuforia = helper.initVuforia(false, 4);
 
 
         VuforiaTrackables imageTargets = vuforia.loadTrackablesFromAsset("FTC_2016-17"); //gets the targets from assets
@@ -46,34 +49,43 @@ public class BILVuforiaImageRecognition extends LinearOpMode {
         imageTargets.get(1).setName("Tools"); //second is tools
         imageTargets.get(2).setName("Legos"); //third is legos
         imageTargets.get(3).setName("Gears"); //fourth is gears
+    //    VuforiaTrackables imageTargets = helper.loadTargets(vuforia, "FTC_2016-17", "Wheels", "Tools", "Legos", "Gears");
 
     //     imageTargets.get(0).setLocation(createMatrix(0, 0, 0, 0, 0, 0));
+
+        robot.init(hardwareMap);
 
         waitForStart(); //waits for the op mode to be started
 
         imageTargets.activate(); //activate the tracking of the image targets once the opmode starts
 
+        boolean seenImage = false;
         while(opModeIsActive()) { //when the op mode is active
+            seenImage = false;
             for(VuforiaTrackable beaconImage : imageTargets){ //loop throught all of the trackables
                 OpenGLMatrix position = ((VuforiaTrackableDefaultListener) beaconImage.getListener()).getPose(); //get positions
 
                 if(position != null) { //if we see the object we are looking for
+                    seenImage = true;
                     VectorF translation = position.getTranslation();
 
                     telemetry.addData(beaconImage.getName() + " - Translation", translation);
 
                     double degreesToTurn = Math.toDegrees(Math.atan2(translation.get(1), translation.get(0))) - 90; //vertical phone
 
-                    if(Math.abs(degreesToTurn) < 15) {
-                        telemetry.addData(beaconImage.getName() + " - Move", translation.get(2));
+                    if(Math.abs(translation.get(2)) > 250) {
+                        double leftSpeed = (40 + (degreesToTurn/4))/100;
+                        double rightSpeed = (40 - (degreesToTurn/4))/100;
+                        robot.setDriveMotors(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
                     } else {
-                        telemetry.addData(beaconImage.getName() + " - Degrees", degreesToTurn);
+                        robot.setAllDriveMotors(0);
                     }
 
                 } else {
                     telemetry.addData(beaconImage.getName(), "Not In View"); // if not in view it will print "Not in view"
                 }
             }
+            if(!seenImage){robot.setAllDriveMotors(0);}
             telemetry.update();
         }
 

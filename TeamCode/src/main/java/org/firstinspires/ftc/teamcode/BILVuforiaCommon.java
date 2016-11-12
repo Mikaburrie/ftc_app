@@ -12,9 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 public class BILVuforiaCommon {
 
-    VuforiaLocalizer vuforia;
-
-    public void initVuforia(boolean cameraPreview, int maxTrackables) {
+    public VuforiaLocalizer initVuforia(boolean cameraPreview, int maxTrackables) {
         //Sets up camera and initializes vuforia.
         VuforiaLocalizer.Parameters parameters;
         if(cameraPreview) {
@@ -28,14 +26,18 @@ public class BILVuforiaCommon {
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK; //uses the back camera(higher resolution)
         parameters.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES;
         parameters.useExtendedTracking = false;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters); //creates new vuforia class with parameters
+        VuforiaLocalizer vuforia = ClassFactory.createVuforiaLocalizer(parameters); //creates new vuforia class with parameters
         Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, maxTrackables); //the max amound of image targets we are looking for
+        return vuforia;
     }
 
-    public void loadTargets(String file, String... names) {
+    public VuforiaTrackables loadTargets(VuforiaLocalizer vuforia, String file, String... names) {
         VuforiaTrackables imageTargets = vuforia.loadTrackablesFromAsset(file); //gets the targets from assets
+        int i = 0;
         for(String name : names) {
-
+            imageTargets.get(i).setName(name);
+            i++;
         }
+        return imageTargets;
     }
 }
