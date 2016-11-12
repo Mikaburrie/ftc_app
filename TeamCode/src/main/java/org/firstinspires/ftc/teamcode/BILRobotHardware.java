@@ -35,8 +35,8 @@ public class BILRobotHardware {
         motorBackRight = hwMap.dcMotor.get("Right_Back");
         motorFrontLeft = hwMap.dcMotor.get("Left_Front");
         motorBackLeft = hwMap.dcMotor.get("Left_Back");
-        motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
-        motorBackRight.setDirection(DcMotor.Direction.REVERSE);
+        motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         motorFrontRight.setPower(0);
