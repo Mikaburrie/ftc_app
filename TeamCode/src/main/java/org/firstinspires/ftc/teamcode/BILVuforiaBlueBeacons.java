@@ -56,7 +56,7 @@ public class BILVuforiaBlueBeacons extends LinearOpMode {
 
             } else {
                 telemetry.addData(beaconImage.getName(), "Not In View"); // if not in view it will print "Not in view"
-                robot.setAllDriveMotors(50);
+                robot.setAllDriveMotors(30);
             }
             telemetry.update();
         }
