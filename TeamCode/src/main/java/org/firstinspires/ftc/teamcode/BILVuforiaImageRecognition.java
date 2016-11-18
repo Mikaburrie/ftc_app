@@ -53,7 +53,7 @@ public class BILVuforiaImageRecognition extends LinearOpMode {
 
     //     imageTargets.get(0).setLocation(createMatrix(0, 0, 0, 0, 0, 0));
 
-    //    robot.init(hardwareMap);
+        robot.init(hardwareMap);
 
         waitForStart(); //waits for the op mode to be started
 
@@ -89,7 +89,10 @@ public class BILVuforiaImageRecognition extends LinearOpMode {
                     telemetry.addData(beaconImage.getName(), "Not In View"); // if not in view it will print "Not in view"
                 }
             }
-            if(!seenImage){robot.setAllDriveMotors(0);}
+            if(!seenImage)
+            {
+                robot.setAllDriveMotors(0);
+            }
             telemetry.update();
         }
 
