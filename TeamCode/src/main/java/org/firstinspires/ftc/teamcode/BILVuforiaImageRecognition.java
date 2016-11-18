@@ -78,8 +78,8 @@ public class BILVuforiaImageRecognition extends LinearOpMode {
                     telemetry.addData(beaconImage.getName() + " - Degrees", degreesToTurn);
 
                     if(Math.abs(zTrans) > 250) {
-                        double leftSpeed = (40 + (degreesToTurn/4))/100;
-                        double rightSpeed = (40 - (degreesToTurn/4))/100;
+                        double leftSpeed = (40 + degreesToTurn * 2)/100;
+                        double rightSpeed = (40 - degreesToTurn * 2)/100;
                         robot.setDriveMotors(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
                     } else {
                         robot.setAllDriveMotors(0);
