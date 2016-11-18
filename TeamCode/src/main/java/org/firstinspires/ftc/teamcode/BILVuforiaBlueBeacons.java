@@ -41,7 +41,7 @@ public class BILVuforiaBlueBeacons extends LinearOpMode {
                 double yTrans = (double)translation.get(0);
                 double zTrans = (double)translation.get(2);
 
-                double degreesToTurn = Math.toDegrees(Math.atan2(zTrans, xTrans)) + 90; //vertical phone
+                double degreesToTurn = Math.toDegrees(Math.atan2(zTrans, xTrans)) + 90; //horizontal
 
                 telemetry.addData(beaconImage.getName() + " - Translation", translation);
                 telemetry.addData(beaconImage.getName() + " - Degrees", degreesToTurn);

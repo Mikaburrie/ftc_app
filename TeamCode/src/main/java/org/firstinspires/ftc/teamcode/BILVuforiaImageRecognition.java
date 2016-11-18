@@ -29,7 +29,7 @@ public class BILVuforiaImageRecognition extends LinearOpMode {
 
     VuforiaLocalizer vuforia;
     BILVuforiaCommon helper = new BILVuforiaCommon();
-  //  BILRobotHardware robot = new BILRobotHardware();
+    BILRobotHardware robot = new BILRobotHardware();
 
     @Override public void runOpMode() throws InterruptedException {
         //Sets up camera and initializes vuforia.
@@ -72,7 +72,7 @@ public class BILVuforiaImageRecognition extends LinearOpMode {
                     double yTrans = (double)translation.get(0);
                     double zTrans = (double)translation.get(2);
 
-                    double degreesToTurn = Math.toDegrees(Math.atan2(xTrans, zTrans)); //vertical phone
+                    double degreesToTurn = Math.toDegrees(Math.atan2(zTrans, xTrans)) + 90; //horizontal phone
 
                     telemetry.addData(beaconImage.getName() + " - Translation", translation);
                     telemetry.addData(beaconImage.getName() + " - Degrees", degreesToTurn);
@@ -80,16 +80,16 @@ public class BILVuforiaImageRecognition extends LinearOpMode {
                     if(Math.abs(zTrans) > 250) {
                         double leftSpeed = (40 + (degreesToTurn/4))/100;
                         double rightSpeed = (40 - (degreesToTurn/4))/100;
-                    //    robot.setDriveMotors(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
+                        robot.setDriveMotors(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
                     } else {
-                    //    robot.setAllDriveMotors(0);
+                        robot.setAllDriveMotors(0);
                     }
 
                 } else {
                     telemetry.addData(beaconImage.getName(), "Not In View"); // if not in view it will print "Not in view"
                 }
             }
-          //  if(!seenImage){robot.setAllDriveMotors(0);}
+            if(!seenImage){robot.setAllDriveMotors(0);}
             telemetry.update();
         }
 
