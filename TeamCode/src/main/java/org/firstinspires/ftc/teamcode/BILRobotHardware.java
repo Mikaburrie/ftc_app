@@ -15,9 +15,9 @@ public class BILRobotHardware {
     public DcMotor motorFrontLeft;
     public DcMotor motorBackLeft;
     public Servo pusher;
-    public double pusherLeft = 0.25;
-    public double pusherMiddle = 0.5;
-    public double pusherRight = 0.75;
+    public double pusherLeft = 0.66;
+    public double pusherMiddle = 0.41;
+    public double pusherRight = 0.16;
 
     /* local OpMode members. */
     HardwareMap hwMap          =  null;
