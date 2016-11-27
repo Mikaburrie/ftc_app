@@ -51,11 +51,11 @@ public class BILVuforiaCommon {
 
     public List<VuforiaTrackable> returnRedTargets(VuforiaTrackables allTargets) {
 
-        return new ArrayList<>(Arrays.asList(targets.get(1), targets.get(3)));
+        return new ArrayList<>(Arrays.asList(allTargets.get(1), allTargets.get(3)));
     }
 
     public List<VuforiaTrackable> returnBlueTargets(VuforiaTrackables allTargets) {
 
-        return new ArrayList<>(Arrays.asList(targets.get(0), targets.get(2)));
+        return new ArrayList<>(Arrays.asList(allTargets.get(0), allTargets.get(2)));
     }
 }
