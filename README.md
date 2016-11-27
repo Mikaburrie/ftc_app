@@ -1,4 +1,4 @@
-# ftc_app
+#ftc_app
 FTC Android Studio project to create FTC Robot Controller app.
 
 This is the FTC SDK that can be used to create an FTC Robot Controller app, with custom op modes.
@@ -17,6 +17,32 @@ Documentation for the FTC SDK are included with this repository.  There is a sub
 For technical questions regarding the SDK, please visit the FTC Technology forum:
 
   http://ftcforum.usfirst.org/forumdisplay.php?156-FTC-Technology
+
+**************************************************************************************
+
+##Broken Image Link Etiquette
+
+###Commits:
+
+**While writing your own commit messages, please keep in mind the following 7 commandments of git commits.**
+
+- Separate subject from body with a blank line
+- Limit the subject line to 50 characters
+- Capitalize the subject line
+- Do not end the subject line with a period
+- Use the imperative mood in the subject line
+- Wrap the body at 72 characters
+- Use the body to explain what and why vs. how
+
+**Before anything, please read the followint article. [Git Commit Etiquette](https://tr.im/BIL-GIT)**
+
+###New files
+
+**After your heading code (for exaple imports and package...) create a multi-line comment including your name and the date of creation of the file.*
+
+###Comments
+
+**ALWAYS use multi-line comments when comments or commented out code takes up multiple lines!**
 
 **************************************************************************************
 
@@ -136,7 +162,7 @@ Release 16.03.09
  * Added code to create log messages while waiting for LinearOpMode shutdown.
  * Fix so Wifi Direct Config activity will no longer launch multiple times.
  * Added the ability to specify an alternate i2c address in software for the Modern Robotics gyro.
- 
+
 **************************************************************************************
 
 Release 16.02.09
@@ -220,7 +246,7 @@ Release 15.11.04.001
  * Fix to keep references stable when updating gamepad.
  * For legacy Matrix motor/servo controllers removed necessity of appending "Motor" and "Servo" to controller names.
  * Updated HT color sensor driver to use constants from ModernRoboticsUsbLegacyModule class.
- * Updated MR color sensor driver to use constants from ModernRoboticsUsbDeviceInterfaceModule class. 
+ * Updated MR color sensor driver to use constants from ModernRoboticsUsbDeviceInterfaceModule class.
  * Correctly handle I2C Address change in all color sensors
  * Updated/cleaned up op modes.
   - Updated comments in LinearI2cAddressChange.java example op mode.
@@ -235,7 +261,7 @@ Release 15.11.04.001
 
 T. Eng
 November 5, 2015
- 
+
 **************************************************************************************
 
 Release 15.10.06.002
