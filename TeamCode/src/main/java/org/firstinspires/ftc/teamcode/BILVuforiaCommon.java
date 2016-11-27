@@ -9,7 +9,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.internal.VuforiaTrackablesImpl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by mikab_000 on 11/10/2016.
@@ -47,21 +49,13 @@ public class BILVuforiaCommon {
         return imageTargets;
     }
 
-    public VuforiaTrackables loadRedTargets() {
-        VuforiaTrackables targets = this.loadTargets("FTC_2016-17", "Wheels", "Tools", "Legos", "Gears");
+    public List<VuforiaTrackable> returnRedTargets(VuforiaTrackables allTargets) {
 
-        targets.remove(2); //removes gears and tools
-        targets.remove(0);
-
-        return targets;
+        return new ArrayList<>(Arrays.asList(targets.get(1), targets.get(3)));
     }
 
-    public VuforiaTrackables loadBlueTargets() {
-        VuforiaTrackables targets = this.loadTargets("FTC_2016-17", "Wheels", "Tools", "Legos", "Gears");
+    public List<VuforiaTrackable> returnBlueTargets(VuforiaTrackables allTargets) {
 
-        targets.remove(3); //removes gears and tools
-        targets.remove(1);
-
-        return targets;
+        return new ArrayList<>(Arrays.asList(targets.get(0), targets.get(2)));
     }
 }
