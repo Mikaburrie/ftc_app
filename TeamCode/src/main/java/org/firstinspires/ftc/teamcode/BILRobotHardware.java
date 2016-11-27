@@ -14,6 +14,10 @@ public class BILRobotHardware {
     public DcMotor motorBackRight;
     public DcMotor motorFrontLeft;
     public DcMotor motorBackLeft;
+    public Servo pusher;
+    public double pusherLeft = 0.25;
+    public double pusherMiddle = 0.5;
+    public double pusherRight = 0.75;
 
     /* local OpMode members. */
     HardwareMap hwMap          =  null;
@@ -29,7 +33,7 @@ public class BILRobotHardware {
         // Save reference to Hardware map
         hwMap = ahwMap;
 
-        // Define and Initialize Motors
+        //Define and Initialize Motors
         //Left_Front, Left_Back, Right_Front, Right_Back
         motorFrontRight = hwMap.dcMotor.get("Right_Front");
         motorBackRight = hwMap.dcMotor.get("Right_Back");
@@ -37,6 +41,9 @@ public class BILRobotHardware {
         motorBackLeft = hwMap.dcMotor.get("Left_Back");
         motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
+
+        //Initialize Servos
+        pusher = hwMap.servo.get("pusher");
 
         // Set all motors to zero power
         motorFrontRight.setPower(0);

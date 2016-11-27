@@ -192,6 +192,14 @@ public class BILTeleOp extends OpMode {
 		// write position values to the wrist and claw servo
 		hookTurner.setPosition(hookPosition);
 		*/
+		double pusherPosition = robot.pusherMiddle;
+		if(gamepad2.right_trigger > 0.5) {
+			pusherPosition = robot.pusherRight;
+		} else if(gamepad2.left_trigger > 0.5) {
+			pusherPosition = robot.pusherLeft;
+		}
+
+		robot.pusher.setPosition(pusherPosition);
 
 
 
