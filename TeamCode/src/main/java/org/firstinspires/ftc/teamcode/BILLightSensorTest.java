@@ -36,7 +36,7 @@ public class BILLightSensorTest extends LinearOpMode {
             buttonDown = gamepad1.x;
 
             //if button just pressed
-            if(buttonDown == true && buttonDown != prevButtonDown) {
+            if(buttonDown && !prevButtonDown) {
                 //toggle the led
                 ledOn = !ledOn;
 
