@@ -27,6 +27,15 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
 
         robot.init(hardwareMap);
 
+        robot.lightSensor.enableLed(true);
+
+        double darkFloorValue = robot.lightSensor.getLightDetected();
+        while(!isStarted()) {
+            darkFloorValue = (darkFloorValue + robot.lightSensor.getLightDetected())/2;
+
+            idle();
+        }
+
         waitForStart();
 
         targets.activate(); //activate the tracking of the image targets once the opmode starts
