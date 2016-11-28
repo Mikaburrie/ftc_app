@@ -84,7 +84,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
             }
             if(!seenImage)
             {
-                robot.setAllDriveMotors(0);
+                robot.setDriveMotors(0.1, 0.1, -0.1, -0.1);
             }
             telemetry.addData("Gyro Heading", robot.gyroSensor.getHeading());
 
