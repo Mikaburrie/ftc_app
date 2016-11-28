@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -38,6 +39,8 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
 
         waitForStart();
 
+        robot.driveDistance(0.5, 5);
+
         targets.activate(); //activate the tracking of the image targets once the opmode starts
 
         List<VuforiaTrackable> redTrackablesList = helper.returnRedTargets(targets);
@@ -63,8 +66,8 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
                     telemetry.addData(beaconImage.getName() + " - Degrees", degreesToTurn);
 
                     if(Math.abs(zTrans) > 250) {
-                        double leftSpeed = (40 + degreesToTurn * 2)/100;
-                        double rightSpeed = (40 - degreesToTurn * 2)/100;
+                        double leftSpeed = Range.clip((40 + degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
+                        double rightSpeed = Range.clip((40 - degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
                         robot.setDriveMotors(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
                     } else {
                         robot.setAllDriveMotors(0);
