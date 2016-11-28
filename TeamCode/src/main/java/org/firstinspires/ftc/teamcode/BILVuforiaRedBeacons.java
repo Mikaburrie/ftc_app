@@ -34,6 +34,11 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         while(!isStarted()) {
             darkFloorValue = (darkFloorValue + robot.lightSensor.getLightDetected())/2;
 
+            //continuously calibrate gyro to keep the heading as accurate as possible
+            if(!robot.gyroSensor.isCalibrating()){
+                robot.gyroSensor.calibrate();
+            }
+
             idle();
         }
 
@@ -81,6 +86,8 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
             {
                 robot.setAllDriveMotors(0);
             }
+            telemetry.addData("Gyro Heading", robot.gyroSensor.getHeading());
+
             telemetry.update();
         }
     }

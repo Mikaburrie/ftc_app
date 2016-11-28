@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -16,6 +17,7 @@ public class BILRobotHardware {
     public DcMotor motorFrontLeft;
     public DcMotor motorBackLeft;
     public LightSensor lightSensor;
+    public GyroSensor gyroSensor;
     public Servo pusher;
     public double pusherLeft = 0.66;
     public double pusherMiddle = 0.41;
@@ -51,6 +53,10 @@ public class BILRobotHardware {
 
         //Initialize sensors
         lightSensor = hwMap.lightSensor.get("lightSensor");
+
+        //Initialize gyro and calibrate
+        gyroSensor = hwMap.gyroSensor.get("gyro");
+        gyroSensor.calibrate();
 
         // Set all motors to zero power
         setAllDriveMotors(0);
