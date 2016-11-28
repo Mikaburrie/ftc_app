@@ -118,7 +118,18 @@ public class BILRobotHardware {
         setAllDriveMotors(power);
 
         //waits for motors to finish moving
-        while(!getAllMotorsBusy()) {/*nothing*/}
+        period.reset();
+        while(getAllMotorsBusy()) {
+            try {
+                //if robot has been driving longer then we think necessary we will automatically stop and move on
+                if(period.milliseconds() > ticks/power/3) {
+                    break;
+                }
+                Thread.sleep(1);
+            }catch(InterruptedException e) {
+
+            }
+        }
 
         //set all motors to 0
         setAllDriveMotors(0);
