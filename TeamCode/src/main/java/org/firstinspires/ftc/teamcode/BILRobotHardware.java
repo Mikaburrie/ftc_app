@@ -146,6 +146,40 @@ public class BILRobotHardware {
     }
 
     /**
+     * @param power The power for the motors.
+     * @param degrees The degrees to turn.
+     */
+    public void turnDegrees(double power, double degrees) {
+        //set to run using encoders just in case
+        setAllMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //gets the current heading to refer to
+        int startHeading = gyroSensor.getHeading();
+        if((startHeading + degrees) >= 360){
+            startHeading -= 360;
+        }
+
+        //if it is more efficient to turn left
+        if(degrees > 180) {
+            setDriveMotors(-power, -power, power, power);
+        } else {
+            setDriveMotors(power, power, -power, -power);
+        }
+
+        //if we still need to turn
+        while(Math.abs(Math.abs(startHeading - gyroSensor.getHeading()) - degrees) > 5) {
+            try {
+                Thread.sleep(1);
+            } catch(InterruptedException e) {
+
+            }
+        }
+
+        //stop all the motors
+        setAllDriveMotors(0);
+    }
+
+    /**
      * @return If one or more motors are busy return true, otherwise false.
      */
     public boolean getAllMotorsBusy() {

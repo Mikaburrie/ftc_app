@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -21,6 +23,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
     VuforiaLocalizer vuforia;
     BILVuforiaCommon helper = new BILVuforiaCommon();
     BILRobotHardware robot = new BILRobotHardware();
+    ElapsedTime time = new ElapsedTime();
 
     @Override public void runOpMode() throws InterruptedException{
         this.vuforia = helper.initVuforia(false, 4);
@@ -82,9 +85,12 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
                     telemetry.addData(beaconImage.getName(), "Not In View"); // if not in view it will print "Not in view"
                 }
             }
-            if(!seenImage)
-            {
-                robot.setDriveMotors(0.1, 0.1, -0.1, -0.1);
+            if(!seenImage) {
+                //turns 45 degrees every second
+                if(time.milliseconds() > 3000){
+                    robot.turnDegrees(0.25, 45);
+                    time.reset();
+                }
             }
             telemetry.addData("Gyro Heading", robot.gyroSensor.getHeading());
 
