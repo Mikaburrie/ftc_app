@@ -45,6 +45,11 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
             idle();
         }
 
+        //wait for the gyro to finish calibrating if it is
+        while(robot.gyroSensor.isCalibrating()){
+            idle();
+        }
+
         waitForStart();
 
         robot.driveDistance(0.5, 5);
