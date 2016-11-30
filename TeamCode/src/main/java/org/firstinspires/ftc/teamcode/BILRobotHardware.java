@@ -24,6 +24,7 @@ public class BILRobotHardware {
     public double pusherRight = 0.16;
     public final static int ticksPerRotation = 1440;
     public final static double wheelCircumference = (4 * Math.PI)/12; //circumference in feet
+    public final static int driveTimeScalar = 3;
 
     /* local OpMode members. */
     HardwareMap hwMap          =  null;
@@ -128,7 +129,7 @@ public class BILRobotHardware {
         while(getAllMotorsBusy()) {
             try {
                 //if robot has been driving longer then we think necessary we will automatically stop and move on
-                if(period.milliseconds() > ticks/power/3) {
+                if(period.milliseconds() > ticks/power/driveTimeScalar) {
                     break;
                 }
                 Thread.sleep(1);
