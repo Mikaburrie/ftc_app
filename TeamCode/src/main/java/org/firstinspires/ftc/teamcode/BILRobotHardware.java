@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -18,6 +19,7 @@ public class BILRobotHardware {
     public DcMotor motorBackLeft;
     public LightSensor lightSensor;
     public GyroSensor gyroSensor;
+    public ColorSensor colorSensor;
     public Servo pusher;
     public double pusherLeft = 0.66;
     public double pusherMiddle = 0.41;
@@ -27,7 +29,7 @@ public class BILRobotHardware {
     public final static int driveTimeScalar = 3;
 
     /* local OpMode members. */
-    HardwareMap hwMap          =  null;
+    HardwareMap hwMap = null;
     private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
@@ -54,6 +56,7 @@ public class BILRobotHardware {
 
         //Initialize sensors
         lightSensor = hwMap.lightSensor.get("lightSensor");
+        colorSensor = hwMap.colorSensor.get("colorSensor");
 
         //Initialize gyro and calibrate
         gyroSensor = hwMap.gyroSensor.get("gyro");
