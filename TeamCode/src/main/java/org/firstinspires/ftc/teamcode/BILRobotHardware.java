@@ -161,6 +161,8 @@ public class BILRobotHardware {
         int startHeading = gyroSensor.getHeading();
         if((startHeading + degrees) >= 360){
             startHeading -= 360;
+        }else if(startHeading + degrees < 0) {
+            startHeading += 360;
         }
 
         //if it is more efficient to turn left
