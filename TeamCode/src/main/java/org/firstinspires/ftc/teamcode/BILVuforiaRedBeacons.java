@@ -86,9 +86,9 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
             } else if(inFrontOfImage) {
                 //push the button
                 robot.driveDistance(0.25, 0.5);
-                if(robot.colorSensor.red() >= 2){ //left side red
+                if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
                     robot.pusher.setPosition(robot.pusherLeft);
-                } else if(robot.colorSensor.blue() >= 4) { //right side is red
+                } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
                     robot.pusher.setPosition(robot.pusherRight);
                 }
                 wait(500);
@@ -132,9 +132,9 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
             } else if(inFrontOfImage) {
                 //push the button
                 robot.driveDistance(0.25, 0.5);
-                if(robot.colorSensor.red() >= 2){ //left side red
+                if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
                     robot.pusher.setPosition(robot.pusherLeft);
-                } else if(robot.colorSensor.blue() >= 4) { //right side is red
+                } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
                     robot.pusher.setPosition(robot.pusherRight);
                 }
                 wait(500);
