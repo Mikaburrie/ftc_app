@@ -23,7 +23,8 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
     VuforiaLocalizer vuforia;
     BILVuforiaCommon helper = new BILVuforiaCommon();
     BILRobotHardware robot = new BILRobotHardware();
-//    ElapsedTime time = new ElapsedTime();
+    ElapsedTime time = new ElapsedTime();
+    double floorColorWhite = 0.1;
 
     @Override public void runOpMode() throws InterruptedException{
         this.vuforia = helper.initVuforia(false, 4);
@@ -32,6 +33,8 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         robot.init(hardwareMap);
 
         robot.lightSensor.enableLed(true);
+
+        Thread.sleep(50);
 
         double darkFloorValue = robot.lightSensor.getLightDetected();
         while(!isStarted()) {
@@ -52,8 +55,14 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
 
         waitForStart();
 
-        robot.driveDistance(0.5, 6);
-        robot.turnDegrees(0.25, -45);
+
+        robot.setAllDriveMotors(0.5);
+
+        while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && opModeIsActive()) {
+            //wait for robot to run over line
+        }
+        robot.setAllDriveMotors(0);
+        robot.turnDegrees(0.5, -45);
 
         targets.activate(); //activate the tracking of the image targets once the opmode starts
 
@@ -85,7 +94,23 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
                 }
             } else if(inFrontOfImage) {
                 //push the button
-                robot.driveDistance(0.25, 0.5);
+                if(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite) {
+                    robot.setDriveMotors(0.5, -0.5, -0.5, 0.5);
+                    time.reset();
+                    while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && time.milliseconds() < 250) {
+
+                    }
+                    if(time.milliseconds() >= 250) {
+                        robot.setDriveMotors(-0.5, 0.5, 0.5, -0.5);
+                        time.reset();
+                        while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && time.milliseconds() < 500) {
+
+                        }
+                    }
+                    robot.setAllDriveMotors(0);
+                }
+
+                robot.driveDistance(0.25, 0.6);
                 if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
                     robot.pusher.setPosition(robot.pusherLeft);
                 } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
@@ -100,13 +125,15 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
             idle();
         }
 
-        robot.driveDistance(0.5, -1);
+        robot.driveDistance(-0.5, 1);
         robot.turnDegrees(0.5, 90);
         robot.setAllDriveMotors(0.5);
 
         while(robot.lightSensor.getLightDetected() < darkFloorValue + 0.1 && opModeIsActive()) {
             //wait for robot to run over line
         }
+        robot.setAllDriveMotors(0);
+        robot.driveDistance(0.5, 0.5); //to top it off
 
         robot.setAllDriveMotors(0);
         robot.turnDegrees(0.5, -90);
@@ -131,13 +158,29 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
                 }
             } else if(inFrontOfImage) {
                 //push the button
-                robot.driveDistance(0.25, 0.5);
+                if(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite) {
+                    robot.setDriveMotors(0.5, -0.5, -0.5, 0.5);
+                    time.reset();
+                    while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && time.milliseconds() < 250) {
+
+                    }
+                    if(time.milliseconds() >= 250) {
+                        robot.setDriveMotors(-0.5, 0.5, 0.5, -0.5);
+                        time.reset();
+                        while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && time.milliseconds() < 500) {
+
+                        }
+                    }
+                    robot.setAllDriveMotors(0);
+                }
+
+                robot.driveDistance(0.25, 0.6);
                 if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
                     robot.pusher.setPosition(robot.pusherLeft);
                 } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
                     robot.pusher.setPosition(robot.pusherRight);
                 }
-                wait(500);
+                Thread.sleep(500);
                 robot.pusher.setPosition(robot.pusherMiddle);
                 inFrontOfImage = false;
                 doneWithSecondBeacon = true;
@@ -145,6 +188,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
 
             idle();
         }
+        robot.driveDistance(-0.5, 1);
 
         /*
         seenImage = false;
