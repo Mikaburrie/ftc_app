@@ -166,14 +166,14 @@ public class BILRobotHardware {
         }
 
         //if it is more efficient to turn left
-        if(degrees > 180) {
+        if(degrees > 180 || degrees < 0) {
             setDriveMotors(-power, -power, power, power);
         } else {
             setDriveMotors(power, power, -power, -power);
         }
 
         //if we still need to turn
-        while(Math.abs(Math.abs(startHeading - gyroSensor.getHeading()) - degrees) > 5) {
+        while(Math.abs(Math.abs(startHeading - gyroSensor.getHeading()) - Math.abs(degrees)) > 5) {
             try {
                 Thread.sleep(1);
             } catch(InterruptedException e) {

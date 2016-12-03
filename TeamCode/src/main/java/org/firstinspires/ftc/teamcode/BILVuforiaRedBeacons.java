@@ -52,7 +52,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
 
         waitForStart();
 
-        robot.driveUntilLineOrDistance(0.5, 6, darkFloorValue);
+        robot.driveDistance(0.5, 6);
         robot.turnDegrees(0.25, -45);
 
         targets.activate(); //activate the tracking of the image targets once the opmode starts
@@ -102,8 +102,11 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
 
         robot.driveDistance(0.5, -1);
         robot.turnDegrees(0.5, 90);
+        robot.setAllDriveMotors(0.5);
 
-        robot.driveUntilLineOrDistance(0.5, 5, darkFloorValue);
+        while(robot.lightSensor.getLightDetected() < darkFloorValue + 0.1 && opModeIsActive()) {
+            //wait for robot to run over line
+        }
 
         robot.setAllDriveMotors(0);
         robot.turnDegrees(0.5, -90);
