@@ -63,8 +63,8 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         boolean doneWithFirstBeacon = false;
         boolean doneWithSecondBeacon = false;
         boolean inFrontOfImage = false;
-        VuforiaTrackable toolsTarget = redTrackablesList.get(1);
-        VuforiaTrackable gearsTarget = redTrackablesList.get(0);
+        VuforiaTrackable toolsTarget = redTrackablesList.get(0);
+        VuforiaTrackable gearsTarget = redTrackablesList.get(1);
 
         while(!doneWithFirstBeacon && opModeIsActive()){
             OpenGLMatrix position = ((VuforiaTrackableDefaultListener) gearsTarget.getListener()).getPose(); //get positions
@@ -91,7 +91,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
                 } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
                     robot.pusher.setPosition(robot.pusherRight);
                 }
-                wait(500);
+                Thread.sleep(500);
                 robot.pusher.setPosition(robot.pusherMiddle);
                 inFrontOfImage = false;
                 doneWithFirstBeacon = true;
