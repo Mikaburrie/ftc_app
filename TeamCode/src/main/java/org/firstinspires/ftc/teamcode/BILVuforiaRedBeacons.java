@@ -60,6 +60,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
 
         while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && opModeIsActive()) {
             //wait for robot to run over line
+            idle();
         }
         robot.setAllDriveMotors(0);
         robot.turnDegrees(0.5, -45);
@@ -98,13 +99,13 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
                     robot.setDriveMotors(0.5, -0.5, -0.5, 0.5);
                     time.reset();
                     while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && time.milliseconds() < 250) {
-
+                        idle();
                     }
                     if(time.milliseconds() >= 250) {
                         robot.setDriveMotors(-0.5, 0.5, 0.5, -0.5);
                         time.reset();
                         while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && time.milliseconds() < 500) {
-
+                            idle();
                         }
                     }
                     robot.setAllDriveMotors(0);
@@ -131,6 +132,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
 
         while(robot.lightSensor.getLightDetected() < darkFloorValue + 0.1 && opModeIsActive()) {
             //wait for robot to run over line
+            idle();
         }
         robot.setAllDriveMotors(0);
         robot.driveDistance(0.5, 0.5); //to top it off
@@ -162,13 +164,13 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
                     robot.setDriveMotors(0.5, -0.5, -0.5, 0.5);
                     time.reset();
                     while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && time.milliseconds() < 250) {
-
+                        idle();
                     }
                     if(time.milliseconds() >= 250) {
                         robot.setDriveMotors(-0.5, 0.5, 0.5, -0.5);
                         time.reset();
                         while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && time.milliseconds() < 500) {
-
+                            idle();
                         }
                     }
                     robot.setAllDriveMotors(0);
