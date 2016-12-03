@@ -113,7 +113,7 @@ public class BILVuforiaBlueBeacons extends LinearOpMode {
                     robot.setAllDriveMotors(0);
                 }
 
-                robot.driveDistance(0.25, 0.6);
+                robot.driveDistance(0.25, 0.65);
                 if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
                     robot.pusher.setPosition(robot.pusherRight);
                 } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
@@ -180,7 +180,7 @@ public class BILVuforiaBlueBeacons extends LinearOpMode {
                     robot.setAllDriveMotors(0);
                 }
 
-                robot.driveDistance(0.25, 0.6);
+                robot.driveDistance(0.25, 0.65);
                 if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
                     robot.pusher.setPosition(robot.pusherRight);
                 } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red

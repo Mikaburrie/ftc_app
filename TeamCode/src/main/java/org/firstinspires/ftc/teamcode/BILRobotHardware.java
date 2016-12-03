@@ -113,7 +113,7 @@ public class BILRobotHardware {
         setAllMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //convert input distance in feet to motor ticks
-        int ticks = (int)Math.round((distance/wheelCircumference) * ticksPerRotation);
+        int ticks = (int)Math.round(Math.abs(distance/wheelCircumference) * ticksPerRotation);
 
         //set the target positions for all motors
         motorFrontLeft.setTargetPosition(ticks);
