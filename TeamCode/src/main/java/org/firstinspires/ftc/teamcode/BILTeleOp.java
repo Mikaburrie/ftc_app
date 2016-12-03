@@ -199,6 +199,12 @@ public class BILTeleOp extends OpMode {
 			pusherPosition = robot.pusherLeft;
 		}
 
+		if(gamepad1.left_bumper) {
+			robot.turnDegrees(1, -90);
+		} else if(gamepad1.right_bumper) {
+			robot.turnDegrees(1, 90);
+		}
+
 		robot.pusher.setPosition(pusherPosition);
 
 
