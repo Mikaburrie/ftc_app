@@ -132,7 +132,7 @@ public class BILRobotHardware {
         while(getAllMotorsBusy()) {
             try {
                 //if robot has been driving longer then we think necessary we will automatically stop and move on
-                if(period.milliseconds() > ticks/power/driveTimeScalar) {
+                if(period.milliseconds() > Math.abs(ticks/power/driveTimeScalar)) {
                     break;
                 }
                 Thread.sleep(1);
