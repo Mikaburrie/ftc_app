@@ -185,6 +185,43 @@ public class BILRobotHardware {
         setAllDriveMotors(0);
     }
 
+    public void driveUntilLineOrDistance(double power, double distance, double floorColor) {
+        lightSensor.enableLed(true);
+        setAllMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        int ticks = (int)Math.round((distance/wheelCircumference) * ticksPerRotation);
+
+        motorFrontLeft.setTargetPosition(ticks);
+        motorBackLeft.setTargetPosition(ticks);
+        motorFrontRight.setTargetPosition(ticks);
+        motorBackRight.setTargetPosition(ticks);
+
+        setAllMotorModes(DcMotor.RunMode.RUN_TO_POSITION);
+
+        setAllDriveMotors(power);
+
+        //waits for motors to finish moving
+        period.reset();
+        while(getAllMotorsBusy() && lightSensor.getLightDetected() < floorColor + 0.1) {
+            try {
+                //if robot has been driving longer then we think necessary we will automatically stop and move on
+                if(period.milliseconds() > ticks/power/driveTimeScalar) {
+                    break;
+                }
+                Thread.sleep(1);
+            }catch(InterruptedException e) {
+
+            }
+        }
+
+        //set all motors to 0
+        setAllDriveMotors(0);
+
+        //resets encoder values and changes mode back to default
+        setAllMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setAllMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
     /**
      * @return If one or more motors are busy return true, otherwise false.
      */
