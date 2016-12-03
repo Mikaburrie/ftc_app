@@ -98,13 +98,15 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
                 if(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite) {
                     robot.setDriveMotors(0.5, -0.5, -0.5, 0.5);
                     time.reset();
-                    while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && time.milliseconds() < 250) {
+                    while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && time.milliseconds() < 500) {
                         idle();
                     }
-                    if(time.milliseconds() >= 250) {
+                    if(time.milliseconds() < 500){
+                        robot.setAllDriveMotors(0);
+                    } else {
                         robot.setDriveMotors(-0.5, 0.5, 0.5, -0.5);
                         time.reset();
-                        while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && time.milliseconds() < 500) {
+                        while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && time.milliseconds() < 1000) {
                             idle();
                         }
                     }
@@ -163,13 +165,15 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
                 if(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite) {
                     robot.setDriveMotors(0.5, -0.5, -0.5, 0.5);
                     time.reset();
-                    while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && time.milliseconds() < 250) {
+                    while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && time.milliseconds() < 500) {
                         idle();
                     }
-                    if(time.milliseconds() >= 250) {
+                    if(time.milliseconds() < 500){
+                        robot.setAllDriveMotors(0);
+                    } else {
                         robot.setDriveMotors(-0.5, 0.5, 0.5, -0.5);
                         time.reset();
-                        while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && time.milliseconds() < 500) {
+                        while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && time.milliseconds() < 1000) {
                             idle();
                         }
                     }
