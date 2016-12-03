@@ -23,7 +23,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
     VuforiaLocalizer vuforia;
     BILVuforiaCommon helper = new BILVuforiaCommon();
     BILRobotHardware robot = new BILRobotHardware();
-    ElapsedTime time = new ElapsedTime();
+//    ElapsedTime time = new ElapsedTime();
 
     @Override public void runOpMode() throws InterruptedException{
         this.vuforia = helper.initVuforia(false, 4);
@@ -59,7 +59,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
 
         List<VuforiaTrackable> redTrackablesList = helper.returnRedTargets(targets);
 
-        boolean seenImage = false;
+//        boolean seenImage = false;
         boolean doneWithFirstBeacon = false;
         boolean doneWithSecondBeacon = false;
         boolean inFrontOfImage = false;
@@ -71,7 +71,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
             if(position != null && !inFrontOfImage){
                 VectorF translation = position.getTranslation();
                 double xTrans = (double)translation.get(1); //x and y are switched for horizontal phone
-                double yTrans = (double)translation.get(0);
+//                double yTrans = (double)translation.get(0);
                 double zTrans = (double)translation.get(2);
 
                 double degreesToTurn = Math.toDegrees(Math.atan2(zTrans, xTrans)) + 90; //horizontal phone
@@ -117,7 +117,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
             if(position != null && !inFrontOfImage){
                 VectorF translation = position.getTranslation();
                 double xTrans = (double)translation.get(1); //x and y are switched for horizontal phone
-                double yTrans = (double)translation.get(0);
+//                double yTrans = (double)translation.get(0);
                 double zTrans = (double)translation.get(2);
 
                 double degreesToTurn = Math.toDegrees(Math.atan2(zTrans, xTrans)) + 90; //horizontal phone
@@ -140,7 +140,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
                 wait(500);
                 robot.pusher.setPosition(robot.pusherMiddle);
                 inFrontOfImage = false;
-                doneWithSecondBeacon = false;
+                doneWithSecondBeacon = true;
             }
 
             idle();
