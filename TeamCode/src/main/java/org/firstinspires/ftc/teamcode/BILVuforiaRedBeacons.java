@@ -128,7 +128,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
             idle();
         }
 
-        robot.driveDistance(-0.5, 1);
+        robot.driveByTime(-1, 250);
         robot.turnDegrees(0.5, 90);
         robot.setAllDriveMotors(0.5);
 
@@ -194,7 +194,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
 
             idle();
         }
-        robot.driveDistance(-0.5, 1);
+        robot.driveDistance(-1, 250);
 
         /*
         seenImage = false;

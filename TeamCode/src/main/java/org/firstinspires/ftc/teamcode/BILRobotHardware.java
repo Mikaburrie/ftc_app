@@ -149,6 +149,18 @@ public class BILRobotHardware {
         setAllMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    public void driveByTime(double power, int milliseconds) {
+        period.reset();
+        setAllDriveMotors(power);
+        while(period.milliseconds() < milliseconds) {
+            try {
+                Thread.sleep(1);
+            }catch (InterruptedException e){
+
+            }
+        }
+    }
+
     /**
      * @param power The power for the motors.
      * @param degrees The degrees to turn.
