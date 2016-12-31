@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
         public void runOpMode() throws InterruptedException {
 
             robot.init(hardwareMap);
+            robot.lightSensor.enableLed(true);
 
             double darkFloorValue = robot.lightSensor.getLightDetected();
             while(!isStarted()) {
