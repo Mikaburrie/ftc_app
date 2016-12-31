@@ -57,7 +57,6 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
 
         robot.setAllDriveMotors(0.5);
         robot.driveUntilLineOrDistance(0.5, 6, darkFloorValue);
-        robot.setAllDriveMotors(0);
         //turn 45 degrees the first 40 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
         robot.turnDegrees(0.5, -40);
         robot.turnDegrees(0.1, -5);
@@ -130,12 +129,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         robot.turnDegrees(0.1, 5);
 
         robot.setAllDriveMotors(0.5);
-
-        while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && opModeIsActive()) {
-            //wait for robot to run over line
-            idle();
-        }
-        robot.setAllDriveMotors(0);
+        robot.driveUntilLineOrDistance(0.5, 8, darkFloorValue);
         robot.driveDistance(0.5, 0.5); //to top it off
 
         robot.setAllDriveMotors(0);
@@ -195,46 +189,5 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
             idle();
         }
         robot.driveDistance(-1, 250);
-
-        /*
-        seenImage = false;
-        for(VuforiaTrackable beaconImage : redTrackablesList){ //loop throught all of the trackables
-            OpenGLMatrix position = ((VuforiaTrackableDefaultListener) beaconImage.getListener()).getPose(); //get positions
-
-            if(position != null) { //if we see the object we are looking for
-                seenImage = true;
-                VectorF translation = position.getTranslation();
-                double xTrans = (double)translation.get(1); //x and y are switched for horizontal phone
-                double yTrans = (double)translation.get(0);
-                double zTrans = (double)translation.get(2);
-
-                double degreesToTurn = Math.toDegrees(Math.atan2(zTrans, xTrans)) + 90; //horizontal phone
-
-                telemetry.addData(beaconImage.getName() + " - Translation", translation);
-                telemetry.addData(beaconImage.getName() + " - Degrees", degreesToTurn);
-
-                if(Math.abs(zTrans) > 250) {
-                    double leftSpeed = Range.clip((40 + degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
-                    double rightSpeed = Range.clip((40 - degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
-                    robot.setDriveMotors(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
-                } else {
-                    robot.setAllDriveMotors(0);
-                }
-
-            } else {
-                telemetry.addData(beaconImage.getName(), "Not In View"); // if not in view it will print "Not in view"
-            }
-        }
-        if(!seenImage) {
-            //turns 45 degrees every second
-            if(time.milliseconds() > 3000){
-                robot.turnDegrees(0.25, 45);
-                time.reset();
-            }
-        }
-
-        telemetry.addData("Gyro Heading", robot.gyroSensor.getHeading());
-
-        telemetry.update();*/
     }
 }
