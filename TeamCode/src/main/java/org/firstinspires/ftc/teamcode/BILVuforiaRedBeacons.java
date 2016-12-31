@@ -90,6 +90,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
             robot.setAllDriveMotors(0);
         }
 
+        imageSeen = false;
         while(!imageSeen){
             VectorF translation = helper.getTargetTranslation(gearsTarget);
             if(translation != null && translation.get(2) > 20) {
@@ -97,6 +98,9 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
             } else {
                 if(translation != null){
                     imageSeen = true;
+                } else {
+                    telemetry.addData("Gears Target", "not in view");
+                    telemetry.update();
                 }
             }
             idle();
