@@ -37,7 +37,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         Thread.sleep(50);
 
         double darkFloorValue = robot.lightSensor.getLightDetected();
-        double sideSpeed = 0.25;
+        double sideSpeed = 0.5;
 
         while(!isStarted()) {
             darkFloorValue = (darkFloorValue + robot.lightSensor.getLightDetected())/2;
@@ -95,7 +95,9 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
             if(translation != null && translation.get(2) > 20) {
                 helper.driveToTarget(gearsTarget, robot);
             } else {
-                imageSeen = true;
+                if(translation != null){
+                    imageSeen = true;
+                }
             }
             idle();
         }
@@ -147,7 +149,9 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
             if(translation != null && translation.get(2) > 20) {
                 helper.driveToTarget(toolsTarget, robot);
             } else {
-                imageSeen = true;
+                if(translation != null){
+                    imageSeen = true;
+                }
             }
             idle();
         }
