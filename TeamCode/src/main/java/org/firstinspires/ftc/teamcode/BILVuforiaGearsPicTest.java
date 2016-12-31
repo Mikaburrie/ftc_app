@@ -38,14 +38,17 @@ public class BILVuforiaGearsPicTest extends LinearOpMode {
             VectorF translation = helper.getTargetTranslation(gearsTarget);
             if(translation != null && translation.get(2) > 20) {
                 helper.driveToTarget(gearsTarget, robot);
+                telemetry.addData("TranslationX", translation.get(0));
+                telemetry.addData("TranslationY", translation.get(1));
+                telemetry.addData("TranslationZ", translation.get(2));
             } else {
                 if(translation != null){
-                    imageSeen = true;
+                    telemetry.addData("Finished", "Done");
                 } else {
                     telemetry.addData("Gears Target", "not in view");
-                    telemetry.update();
                 }
             }
+            telemetry.update();
             idle();
         }
     }
