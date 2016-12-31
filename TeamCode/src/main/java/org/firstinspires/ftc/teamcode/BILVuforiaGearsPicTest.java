@@ -4,9 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.List;
@@ -35,7 +37,12 @@ public class BILVuforiaGearsPicTest extends LinearOpMode {
 
         boolean imageSeen = false;
         while(!imageSeen){
-            VectorF translation = helper.getTargetTranslation(gearsTarget);
+            VectorF translation = null;
+            OpenGLMatrix position = ((VuforiaTrackableDefaultListener) gearsTarget.getListener()).getPose(); //get positions
+            if(position != null){
+                translation = position.getTranslation();
+            }
+
             if(translation != null && translation.get(2) > 20) {
                 helper.driveToTarget(gearsTarget, robot);
                 telemetry.addData("TranslationX", translation.get(0));

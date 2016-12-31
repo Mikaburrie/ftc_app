@@ -69,8 +69,9 @@ public class BILVuforiaCommon {
         OpenGLMatrix position = ((VuforiaTrackableDefaultListener) target.getListener()).getPose(); //get positions
         if(position != null){
             return position.getTranslation();
+        }else{
+            return null;
         }
-        return null;
     }
 
     public void driveToTarget(VuforiaTrackable target, BILRobotHardware robot){
