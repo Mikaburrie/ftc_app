@@ -21,9 +21,9 @@ public class BILRobotHardware {
     public GyroSensor gyroSensor;
     public ColorSensor colorSensor;
     public Servo pusher;
-    public double pusherLeft = 0.16;
+    public double pusherLeft = 0.66;
     public double pusherMiddle = 0.41;
-    public double pusherRight = 0.66;
+    public double pusherRight = 0.16;
     public final static int ticksPerRotation = 1440;
     public final static double wheelCircumference = (4 * Math.PI)/12; //circumference in feet
     public final static int driveTimeScalar = 3;
