@@ -70,23 +70,14 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         boolean doneWithFirstBeacon = false;
         boolean doneWithSecondBeacon = false;
         boolean inFrontOfImage = false;
+        boolean imageSeen = false;
         VuforiaTrackable toolsTarget = redTrackablesList.get(0);
         VuforiaTrackable gearsTarget = redTrackablesList.get(1);
 
         while(!doneWithFirstBeacon && opModeIsActive()){
-            OpenGLMatrix position = ((VuforiaTrackableDefaultListener) gearsTarget.getListener()).getPose(); //get positions
-            if(position != null && !inFrontOfImage){
-                VectorF translation = position.getTranslation();
-                double xTrans = (double)translation.get(1); //x and y are switched for horizontal phone
-//                double yTrans = (double)translation.get(0);
-                double zTrans = (double)translation.get(2);
-
-                double degreesToTurn = Math.toDegrees(Math.atan2(zTrans, xTrans)) + 90; //horizontal phone
-
-                if(Math.abs(zTrans) > 250) {
-                    double leftSpeed = Range.clip((40 + degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
-                    double rightSpeed = Range.clip((40 - degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
-                    robot.setDriveMotors(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
+            if(!inFrontOfImage){
+                if(helper.getTargetTranslation(gearsTarget).get(2) > 250) {
+                    helper.driveToTarget(gearsTarget, robot);
                 } else {
                     inFrontOfImage = true;
                 }
@@ -110,7 +101,15 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
                     robot.setAllDriveMotors(0);
                 }
 
-                robot.driveDistance(0.25, 0.65);
+                while(!imageSeen){
+                    if(helper.getTargetTranslation(gearsTarget).get(2) > 20) {
+                        helper.driveToTarget(gearsTarget, robot);
+                    } else {
+                        imageSeen = true;
+                    }
+                    idle();
+                }
+
                 if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
                     robot.pusher.setPosition(robot.pusherLeft);
                 } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
@@ -145,20 +144,11 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         robot.turnDegrees(0.1, -5);
 
         inFrontOfImage = false;
+        imageSeen = false;
         while(!doneWithSecondBeacon && opModeIsActive()){
-            OpenGLMatrix position = ((VuforiaTrackableDefaultListener) toolsTarget.getListener()).getPose(); //get positions
-            if(position != null && !inFrontOfImage){
-                VectorF translation = position.getTranslation();
-                double xTrans = (double)translation.get(1); //x and y are switched for horizontal phone
-//                double yTrans = (double)translation.get(0);
-                double zTrans = (double)translation.get(2);
-
-                double degreesToTurn = Math.toDegrees(Math.atan2(zTrans, xTrans)) + 90; //horizontal phone
-
-                if(Math.abs(zTrans) > 250) {
-                    double leftSpeed = Range.clip((40 + degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
-                    double rightSpeed = Range.clip((40 - degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
-                    robot.setDriveMotors(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
+            if(!inFrontOfImage){
+                if(helper.getTargetTranslation(toolsTarget).get(2) > 250) {
+                    helper.driveToTarget(toolsTarget, robot);
                 } else {
                     inFrontOfImage = true;
                 }
@@ -182,7 +172,15 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
                     robot.setAllDriveMotors(0);
                 }
 
-                robot.driveDistance(0.25, 0.65);
+                while(!imageSeen){
+                    if(helper.getTargetTranslation(toolsTarget).get(2) > 20) {
+                        helper.driveToTarget(toolsTarget, robot);
+                    } else {
+                        imageSeen = true;
+                    }
+                    idle();
+                }
+
                 if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
                     robot.pusher.setPosition(robot.pusherLeft);
                 } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red

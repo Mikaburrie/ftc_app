@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.util.Range;
 import com.vuforia.HINT;
 import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.internal.VuforiaTrackablesImpl;
 
@@ -59,5 +63,26 @@ public class BILVuforiaCommon {
     public List<VuforiaTrackable> returnBlueTargets(VuforiaTrackables allTargets) {
 
         return new ArrayList<>(Arrays.asList(allTargets.get(0), allTargets.get(2)));
+    }
+
+    public VectorF getTargetTranslation(VuforiaTrackable target){
+        OpenGLMatrix position = ((VuforiaTrackableDefaultListener) target.getListener()).getPose(); //get positions
+        if(position != null){
+            return position.getTranslation();
+        }
+        return null;
+    }
+
+    public void driveToTarget(VuforiaTrackable target, BILRobotHardware robot){
+        VectorF translation = getTargetTranslation(target);
+        if(translation == null){return;}
+        double xTrans = (double)translation.get(1); //x and y are switched for horizontal phone
+        double zTrans = (double)translation.get(2);
+
+        double degreesToTurn = Math.toDegrees(Math.atan2(zTrans, xTrans)) + 90; //horizontal phone
+
+        double leftSpeed = Range.clip((40 + degreesToTurn * 2) / 100, -Math.abs(zTrans) / 2000, Math.abs(zTrans) / 2000);
+        double rightSpeed = Range.clip((40 - degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
+        robot.setDriveMotors(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
     }
 }
