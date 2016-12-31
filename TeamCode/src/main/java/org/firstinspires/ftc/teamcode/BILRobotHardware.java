@@ -27,6 +27,7 @@ public class BILRobotHardware {
     public final static int ticksPerRotation = 1440;
     public final static double wheelCircumference = (4 * Math.PI)/12; //circumference in feet
     public final static int driveTimeScalar = 3;
+    public final static double lineColorThreshold = 0.1;
 
     /* local OpMode members. */
     HardwareMap hwMap = null;
@@ -214,7 +215,7 @@ public class BILRobotHardware {
 
         //waits for motors to finish moving
         period.reset();
-        while(getAllMotorsBusy() && lightSensor.getLightDetected() < floorColor + 0.1) {
+        while(getAllMotorsBusy() && lightSensor.getLightDetected() < floorColor + lineColorThreshold) {
             try {
                 //if robot has been driving longer then we think necessary we will automatically stop and move on
                 if(period.milliseconds() > ticks/power/driveTimeScalar) {

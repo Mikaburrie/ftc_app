@@ -24,7 +24,6 @@ public class BILVuforiaBlueBeacons extends LinearOpMode {
     BILVuforiaCommon helper = new BILVuforiaCommon();
     BILRobotHardware robot = new BILRobotHardware();
     ElapsedTime time = new ElapsedTime();
-    double floorColorWhite = 0.1;
 
     @Override public void runOpMode() throws InterruptedException{
         this.vuforia = helper.initVuforia(false, 4);
@@ -58,7 +57,7 @@ public class BILVuforiaBlueBeacons extends LinearOpMode {
 
         robot.setAllDriveMotors(0.5);
 
-        while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && opModeIsActive()) {
+        while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && opModeIsActive()) {
             //wait for robot to run over line
             idle();
         }
@@ -97,10 +96,10 @@ public class BILVuforiaBlueBeacons extends LinearOpMode {
                 }
             } else if(inFrontOfImage) {
                 //push the button
-                if(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite) {
+                if(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold) {
                     robot.setDriveMotors(-0.5, 0.5, 0.5, -0.5);
                     time.reset();
-                    while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && time.milliseconds() < 500) {
+                    while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && time.milliseconds() < 500) {
                         idle();
                     }
                     if(time.milliseconds() < 500) {
@@ -108,7 +107,7 @@ public class BILVuforiaBlueBeacons extends LinearOpMode {
                     } else {
                         robot.setDriveMotors(0.5, -0.5, -0.5, 0.5);
                         time.reset();
-                        while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && time.milliseconds() < 1000) {
+                        while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && time.milliseconds() < 1000) {
                             idle();
                         }
                     }
@@ -137,7 +136,7 @@ public class BILVuforiaBlueBeacons extends LinearOpMode {
 
         robot.setAllDriveMotors(0.5);
 
-        while(robot.lightSensor.getLightDetected() < darkFloorValue + 0.1 && opModeIsActive()) {
+        while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && opModeIsActive()) {
             //wait for robot to run over line
             idle();
         }
@@ -169,10 +168,10 @@ public class BILVuforiaBlueBeacons extends LinearOpMode {
                 }
             } else if(inFrontOfImage) {
                 //push the button
-                if(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite) {
+                if(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold) {
                     robot.setDriveMotors(-0.5, 0.5, 0.5, -0.5);
                     time.reset();
-                    while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && time.milliseconds() < 500) {
+                    while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && time.milliseconds() < 500) {
                         idle();
                     }
                     if(time.milliseconds() < 500) {
@@ -180,7 +179,7 @@ public class BILVuforiaBlueBeacons extends LinearOpMode {
                     } else {
                         robot.setDriveMotors(0.5, -0.5, -0.5, 0.5);
                         time.reset();
-                        while(robot.lightSensor.getLightDetected() < darkFloorValue + floorColorWhite && time.milliseconds() < 1000) {
+                        while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && time.milliseconds() < 1000) {
                             idle();
                         }
                     }
