@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * Created by mikab_000 on 11/12/2016.
@@ -36,6 +37,8 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         Thread.sleep(50);
 
         double darkFloorValue = robot.lightSensor.getLightDetected();
+        double sideSpeed = 0.25;
+
         while(!isStarted()) {
             darkFloorValue = (darkFloorValue + robot.lightSensor.getLightDetected())/2;
 
@@ -65,63 +68,45 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
 
         List<VuforiaTrackable> redTrackablesList = helper.returnRedTargets(targets);
 
-//        boolean seenImage = false;
-        boolean doneWithFirstBeacon = false;
-        boolean doneWithSecondBeacon = false;
-        boolean inFrontOfImage = false;
         boolean imageSeen = false;
         VuforiaTrackable toolsTarget = redTrackablesList.get(0);
         VuforiaTrackable gearsTarget = redTrackablesList.get(1);
 
-        while(!doneWithFirstBeacon && opModeIsActive()){
-            if(!inFrontOfImage){
-                if(helper.getTargetTranslation(gearsTarget).get(2) > 250) {
-                    helper.driveToTarget(gearsTarget, robot);
-                } else {
-                    inFrontOfImage = true;
-                }
-            } else if(inFrontOfImage) {
-                //push the button
-                if(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold) {
-                    robot.setDriveMotors(0.5, -0.5, -0.5, 0.5);
-                    time.reset();
-                    while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && time.milliseconds() < 500) {
-                        idle();
-                    }
-                    if(time.milliseconds() < 500){
-                        robot.setAllDriveMotors(0);
-                    } else {
-                        robot.setDriveMotors(-0.5, 0.5, 0.5, -0.5);
-                        time.reset();
-                        while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && time.milliseconds() < 1000) {
-                            idle();
-                        }
-                    }
-                    robot.setAllDriveMotors(0);
-                }
-
-                while(!imageSeen){
-                    if(helper.getTargetTranslation(gearsTarget).get(2) > 20) {
-                        helper.driveToTarget(gearsTarget, robot);
-                    } else {
-                        imageSeen = true;
-                    }
+        if(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold) {
+            robot.setDriveMotors(sideSpeed, -sideSpeed, -sideSpeed, sideSpeed);
+            time.reset();
+            while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && time.milliseconds() < 500) {
+                idle();
+            }
+            if(time.milliseconds() < 500){
+                robot.setAllDriveMotors(0);
+            } else {
+                robot.setDriveMotors(-sideSpeed, sideSpeed, sideSpeed, -sideSpeed);
+                time.reset();
+                while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && time.milliseconds() < 1000) {
                     idle();
                 }
-
-                if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
-                    robot.pusher.setPosition(robot.pusherLeft);
-                } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
-                    robot.pusher.setPosition(robot.pusherRight);
-                }
-                Thread.sleep(500);
-                robot.pusher.setPosition(robot.pusherMiddle);
-                inFrontOfImage = false;
-                doneWithFirstBeacon = true;
             }
+            robot.setAllDriveMotors(0);
+        }
 
+        while(!imageSeen){
+            VectorF translation = helper.getTargetTranslation(gearsTarget);
+            if(translation != null && translation.get(2) > 20) {
+                helper.driveToTarget(gearsTarget, robot);
+            } else {
+                imageSeen = true;
+            }
             idle();
         }
+
+        if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
+            robot.pusher.setPosition(robot.pusherLeft);
+        } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
+            robot.pusher.setPosition(robot.pusherRight);
+        }
+        Thread.sleep(500);
+        robot.pusher.setPosition(robot.pusherMiddle);
 
         robot.driveByTime(-1, 250);
         //turn 45 degrees the first 40 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
@@ -137,57 +122,44 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         robot.turnDegrees(0.5, -85);
         robot.turnDegrees(0.1, -5);
 
-        inFrontOfImage = false;
         imageSeen = false;
-        while(!doneWithSecondBeacon && opModeIsActive()){
-            if(!inFrontOfImage){
-                if(helper.getTargetTranslation(toolsTarget).get(2) > 250) {
-                    helper.driveToTarget(toolsTarget, robot);
-                } else {
-                    inFrontOfImage = true;
-                }
-            } else if(inFrontOfImage) {
-                //push the button
-                if(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold) {
-                    robot.setDriveMotors(0.5, -0.5, -0.5, 0.5);
-                    time.reset();
-                    while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && time.milliseconds() < 500) {
-                        idle();
-                    }
-                    if(time.milliseconds() < 500){
-                        robot.setAllDriveMotors(0);
-                    } else {
-                        robot.setDriveMotors(-0.5, 0.5, 0.5, -0.5);
-                        time.reset();
-                        while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && time.milliseconds() < 1000) {
-                            idle();
-                        }
-                    }
-                    robot.setAllDriveMotors(0);
-                }
-
-                while(!imageSeen){
-                    if(helper.getTargetTranslation(toolsTarget).get(2) > 20) {
-                        helper.driveToTarget(toolsTarget, robot);
-                    } else {
-                        imageSeen = true;
-                    }
+        //push the button
+        if(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold) {
+            robot.setDriveMotors(sideSpeed, -sideSpeed, -sideSpeed, sideSpeed);
+            time.reset();
+            while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && time.milliseconds() < 500) {
+                idle();
+            }
+            if(time.milliseconds() < 500){
+                robot.setAllDriveMotors(0);
+            } else {
+                robot.setDriveMotors(-sideSpeed, sideSpeed, sideSpeed, -sideSpeed);
+                time.reset();
+                while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && time.milliseconds() < 1000) {
                     idle();
                 }
-
-                if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
-                    robot.pusher.setPosition(robot.pusherLeft);
-                } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
-                    robot.pusher.setPosition(robot.pusherRight);
-                }
-                Thread.sleep(500);
-                robot.pusher.setPosition(robot.pusherMiddle);
-                inFrontOfImage = false;
-                doneWithSecondBeacon = true;
             }
+            robot.setAllDriveMotors(0);
+        }
 
+        while(!imageSeen){
+            VectorF translation = helper.getTargetTranslation(toolsTarget);
+            if(translation != null && translation.get(2) > 20) {
+                helper.driveToTarget(toolsTarget, robot);
+            } else {
+                imageSeen = true;
+            }
             idle();
         }
+
+        if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
+            robot.pusher.setPosition(robot.pusherLeft);
+        } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
+            robot.pusher.setPosition(robot.pusherRight);
+        }
+        Thread.sleep(500);
+        robot.pusher.setPosition(robot.pusherMiddle);
+
         robot.driveDistance(-1, 250);
     }
 }
