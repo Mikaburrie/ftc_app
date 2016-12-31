@@ -56,11 +56,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
 
 
         robot.setAllDriveMotors(0.5);
-
-        while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && opModeIsActive()) {
-            //wait for robot to run over line
-            idle();
-        }
+        robot.driveUntilLineOrDistance(0.5, 6, darkFloorValue);
         robot.setAllDriveMotors(0);
         //turn 45 degrees the first 40 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
         robot.turnDegrees(0.5, -40);
