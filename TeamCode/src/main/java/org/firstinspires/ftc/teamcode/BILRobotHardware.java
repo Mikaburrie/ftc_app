@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
- * Created by mikab_000 on 10/20/2016.
+ * Created on 10/20/2016 by Mika.
  */
 public class BILRobotHardware {
     /* Public OpMode members. */
@@ -27,7 +27,7 @@ public class BILRobotHardware {
     public final static int ticksPerRotation = 1440;
     public final static double wheelCircumference = (4 * Math.PI)/12; //circumference in feet
     public final static int driveTimeScalar = 3;
-    public final static double lineColorThreshold = 0.1;
+    public final double lineColorThreshold = 0.1;
 
     /* local OpMode members. */
     HardwareMap hwMap = null;
@@ -138,7 +138,7 @@ public class BILRobotHardware {
                 }
                 Thread.sleep(1);
             }catch(InterruptedException e) {
-
+                //do nothing
             }
         }
 
@@ -157,7 +157,7 @@ public class BILRobotHardware {
             try {
                 Thread.sleep(1);
             }catch (InterruptedException e){
-
+                //do nothing
             }
         }
     }
@@ -190,7 +190,7 @@ public class BILRobotHardware {
             try {
                 Thread.sleep(1);
             } catch(InterruptedException e) {
-
+                //do nothing
             }
         }
 
@@ -223,7 +223,7 @@ public class BILRobotHardware {
                 }
                 Thread.sleep(1);
             }catch(InterruptedException e) {
-
+                //do nothing
             }
         }
 
