@@ -50,6 +50,7 @@ public class BILVuforiaGearsPicTest extends LinearOpMode {
                 } else {
                     if(translation != null){
                         telemetry.addData("Finished", "Done");
+                        robot.setAllDriveMotors(0);
                     } else {
                         telemetry.addData("Gears Target", "not in view");
                     }
