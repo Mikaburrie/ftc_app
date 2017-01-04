@@ -18,14 +18,14 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by mikab_000 on 11/10/2016.
+ * Created on 11/10/2016 by Mika.
  */
 public class BILVuforiaCommon {
 
     VuforiaLocalizer vuforia;
     int redBeaconColor = 2;
     int blueBeaconColor = 4;
-    int targetImageDistance = 100;
+    int targetImageDistance = 90;
 
     public VuforiaLocalizer initVuforia(boolean cameraPreview, int maxTrackables) {
         //Sets up camera and initializes vuforia.

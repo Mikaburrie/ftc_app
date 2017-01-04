@@ -39,21 +39,17 @@ public class BILVuforiaGearsPicTest extends LinearOpMode {
 
         boolean imageSeen = false;
         while(!imageSeen){
-            OpenGLMatrix position = ((VuforiaTrackableDefaultListener) gearsTarget.getListener()).getPose(); //get positions
-            if(position != null){
-                VectorF translation = position.getTranslation();
-                telemetry.addData("TranslationX", translation.get(0));
-                telemetry.addData("TranslationY", translation.get(1));
-                telemetry.addData("TranslationZ", translation.get(2));
-                if(translation != null && Math.abs(translation.get(2)) > helper.targetImageDistance) {
-                    helper.driveToTarget(gearsTarget, robot);
+
+            VectorF translation = helper.getTargetTranslation(gearsTarget);
+
+            if(translation != null && Math.abs(translation.get(2)) > helper.targetImageDistance) {
+                helper.driveToTarget(gearsTarget, robot);
+            } else {
+                if(translation != null){
+                    telemetry.addData("Finished", "Done");
+                    robot.setAllDriveMotors(0);
                 } else {
-                    if(translation != null){
-                        telemetry.addData("Finished", "Done");
-                        robot.setAllDriveMotors(0);
-                    } else {
-                        telemetry.addData("Gears Target", "not in view");
-                    }
+                    telemetry.addData("Gears Target", "not in view");
                 }
             }
 
