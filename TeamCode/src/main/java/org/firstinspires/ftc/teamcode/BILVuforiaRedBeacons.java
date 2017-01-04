@@ -33,6 +33,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         robot.init(hardwareMap);
 
         robot.lightSensor.enableLed(true);
+        robot.colorSensor.enableLed(false);
 
         Thread.sleep(50);
 
@@ -71,6 +72,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         VuforiaTrackable toolsTarget = redTrackablesList.get(0);
         VuforiaTrackable gearsTarget = redTrackablesList.get(1);
 
+        // Strafe one way then another looking for the white line
         if(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold) {
             robot.setDriveMotors(sideSpeed, -sideSpeed, -sideSpeed, sideSpeed);
             time.reset();
@@ -89,9 +91,10 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
             robot.setAllDriveMotors(0);
         }
 
+        // Once it's in front of the image, adjust and move forward until exactly in front of image, within x mm.
         while(!imageSeen){
             VectorF translation = helper.getTargetTranslation(gearsTarget);
-            if(translation != null && Math.abs(translation.get(2)) > helper.targetImageDistance) {
+            if(translation != null && Math.abs(translation.get(2)) > helper.targetImageDistance) { // 2 = z
                 helper.driveToTarget(gearsTarget, robot);
             } else {
                 if(translation != null){
@@ -115,8 +118,9 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         Thread.sleep(500);
         robot.pusher.setPosition(robot.pusherMiddle);
 
+        // Drive backwards 200 ms
         robot.driveByTime(-1, 200);
-        //turn 45 degrees the first 40 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
+        //turn 90 degrees the first 85 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
         robot.turnDegrees(0.5, 85);
         robot.turnDegrees(0.1, 5);
 
@@ -125,7 +129,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         robot.driveDistance(0.5, 0.5); //to top it off
 
         robot.setAllDriveMotors(0);
-        //turn 45 degrees the first 40 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
+        //turn -90 degrees the first 85 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
         robot.turnDegrees(0.5, -85);
         robot.turnDegrees(0.1, -5);
 
