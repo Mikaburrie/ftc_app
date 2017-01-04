@@ -119,7 +119,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         robot.pusher.setPosition(robot.pusherMiddle);
 
         // Drive backwards 200 ms
-        robot.driveByTime(-1, 200);
+        robot.driveByTime(-0.5, 400);
         //turn 90 degrees the first 85 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
         robot.turnDegrees(0.5, 85);
         robot.turnDegrees(0.1, 5);
@@ -176,6 +176,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         Thread.sleep(500);
         robot.pusher.setPosition(robot.pusherMiddle);
 
-        robot.driveDistance(-1, 250);
+        robot.driveByTime(-0.5, 400);
+        robot.setAllDriveMotors(0);
     }
 }
