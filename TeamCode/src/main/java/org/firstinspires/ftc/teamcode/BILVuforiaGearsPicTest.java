@@ -45,7 +45,7 @@ public class BILVuforiaGearsPicTest extends LinearOpMode {
                 telemetry.addData("TranslationX", translation.get(0));
                 telemetry.addData("TranslationY", translation.get(1));
                 telemetry.addData("TranslationZ", translation.get(2));
-                if(translation != null && Math.abs(translation.get(2)) > 50) {
+                if(translation != null && Math.abs(translation.get(2)) > helper.targetImageDistance) {
                     helper.driveToTarget(gearsTarget, robot);
                 } else {
                     if(translation != null){

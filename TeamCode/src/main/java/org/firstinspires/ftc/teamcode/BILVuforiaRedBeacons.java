@@ -93,7 +93,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         imageSeen = false;
         while(!imageSeen){
             VectorF translation = helper.getTargetTranslation(gearsTarget);
-            if(translation != null && Math.abs(translation.get(2)) > 50) {
+            if(translation != null && Math.abs(translation.get(2)) > helper.targetImageDistance) {
                 helper.driveToTarget(gearsTarget, robot);
             } else {
                 if(translation != null){
@@ -150,7 +150,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
 
         while(!imageSeen){
             VectorF translation = helper.getTargetTranslation(toolsTarget);
-            if(translation != null && Math.abs(translation.get(2)) > 50) {
+            if(translation != null && Math.abs(translation.get(2)) > helper.targetImageDistance) {
                 helper.driveToTarget(toolsTarget, robot);
             } else {
                 if(translation != null){
