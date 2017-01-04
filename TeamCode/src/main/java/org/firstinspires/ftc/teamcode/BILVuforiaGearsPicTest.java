@@ -2,19 +2,14 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-import java.util.List;
-
 /**
- * Created by mikab_000 on 12/31/2016.
+ * Created on 12/31/2016 by Mika.
  */
 @Autonomous(name="BIL: Gears Tracking Test", group="BIL")
 public class BILVuforiaGearsPicTest extends LinearOpMode {
@@ -48,6 +43,7 @@ public class BILVuforiaGearsPicTest extends LinearOpMode {
                 if(translation != null){
                     telemetry.addData("Finished", "Done");
                     robot.setAllDriveMotors(0);
+                    imageSeen = true;
                 } else {
                     telemetry.addData("Gears Target", "not in view");
                 }

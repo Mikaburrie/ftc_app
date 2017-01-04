@@ -58,7 +58,6 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         waitForStart();
 
 
-        robot.setAllDriveMotors(0.5);
         robot.driveUntilLineOrDistance(0.5, 6, darkFloorValue);
         //turn 45 degrees the first 40 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
         robot.turnDegrees(0.5, -40);
@@ -90,7 +89,6 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
             robot.setAllDriveMotors(0);
         }
 
-        imageSeen = false;
         while(!imageSeen){
             VectorF translation = helper.getTargetTranslation(gearsTarget);
             if(translation != null && Math.abs(translation.get(2)) > helper.targetImageDistance) {
@@ -106,6 +104,9 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
             idle();
         }
 
+        telemetry.addData("Red:", robot.colorSensor.red());
+        telemetry.addData("Blue:", robot.colorSensor.blue());
+        telemetry.update();
         if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
             robot.pusher.setPosition(robot.pusherLeft);
         } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
@@ -114,13 +115,13 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         Thread.sleep(500);
         robot.pusher.setPosition(robot.pusherMiddle);
 
-        robot.driveByTime(-1, 250);
+        robot.driveByTime(-1, 200);
         //turn 45 degrees the first 40 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
         robot.turnDegrees(0.5, 85);
         robot.turnDegrees(0.1, 5);
 
         robot.setAllDriveMotors(0.5);
-        robot.driveUntilLineOrDistance(0.5, 8, darkFloorValue);
+        robot.driveUntilLineOrDistance(0.5, 6, darkFloorValue);
         robot.driveDistance(0.5, 0.5); //to top it off
 
         robot.setAllDriveMotors(0);
@@ -150,7 +151,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
 
         while(!imageSeen){
             VectorF translation = helper.getTargetTranslation(toolsTarget);
-            if(translation != null && Math.abs(translation.get(2)) > helper.targetImageDistance) {
+            if (translation != null && Math.abs(translation.get(2)) > helper.targetImageDistance) {
                 helper.driveToTarget(toolsTarget, robot);
             } else {
                 if(translation != null){
@@ -160,6 +161,9 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
             idle();
         }
 
+        telemetry.addData("Red:", robot.colorSensor.red());
+        telemetry.addData("Blue:", robot.colorSensor.blue());
+        telemetry.update();
         if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
             robot.pusher.setPosition(robot.pusherLeft);
         } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
