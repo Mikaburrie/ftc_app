@@ -18,7 +18,6 @@ public class BILVuforiaRedBeacons extends BILAutonomousCommon {
 
     VuforiaLocalizer vuforia;
     BILVuforiaCommon helper = new BILVuforiaCommon();
-    ElapsedTime time = new ElapsedTime();
 
     @Override public void runOpMode() throws InterruptedException{
         this.vuforia = helper.initVuforia(false, 4);
@@ -31,9 +30,7 @@ public class BILVuforiaRedBeacons extends BILAutonomousCommon {
 
         Thread.sleep(50);
 
-        double darkFloorValue = robot.lightSensor.getLightDetected();
-        double sideSpeed = 0.5;
-
+        darkFloorValue = robot.lightSensor.getLightDetected();
         while(!isStarted()) {
             darkFloorValue = (darkFloorValue + robot.lightSensor.getLightDetected())/2;
 
@@ -67,23 +64,7 @@ public class BILVuforiaRedBeacons extends BILAutonomousCommon {
         VuforiaTrackable gearsTarget = redTrackablesList.get(1);
 
         // Strafe one way then another looking for the white line
-        if(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold) {
-            setDriveMotors(sideSpeed, -sideSpeed, -sideSpeed, sideSpeed);
-            time.reset();
-            while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 500) {
-                idle();
-            }
-            if(time.milliseconds() < 500){
-                setAllDriveMotors(0);
-            } else {
-                setDriveMotors(-sideSpeed, sideSpeed, sideSpeed, -sideSpeed);
-                time.reset();
-                while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 1000) {
-                    idle();
-                }
-            }
-            setAllDriveMotors(0);
-        }
+        findWhiteLine();
 
         // Once it's in front of the image, adjust and move forward until exactly in front of image, within x mm.
         while(!imageSeen){
@@ -128,24 +109,9 @@ public class BILVuforiaRedBeacons extends BILAutonomousCommon {
         turnDegrees(0.1, -5);
 
         imageSeen = false;
-        //push the button
-        if(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold) {
-            setDriveMotors(sideSpeed, -sideSpeed, -sideSpeed, sideSpeed);
-            time.reset();
-            while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 500) {
-                idle();
-            }
-            if(time.milliseconds() < 500){
-                setAllDriveMotors(0);
-            } else {
-                setDriveMotors(-sideSpeed, sideSpeed, sideSpeed, -sideSpeed);
-                time.reset();
-                while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 1000) {
-                    idle();
-                }
-            }
-            setAllDriveMotors(0);
-        }
+
+        //find the white line
+        findWhiteLine();
 
         while(!imageSeen){
             VectorF translation = helper.getTargetTranslation(toolsTarget);

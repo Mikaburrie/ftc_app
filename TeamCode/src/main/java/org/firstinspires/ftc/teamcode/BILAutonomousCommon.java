@@ -6,18 +6,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 
 /**
  * Created by Mika/Alex on 12/12/2015.
  */
 public abstract class BILAutonomousCommon extends LinearOpMode {
     BILRobotHardware robot = new BILRobotHardware();
+    ElapsedTime time = new ElapsedTime();
 
     public final static int ticksPerRotation = 1440;
     public final static double wheelCircumference = (4 * Math.PI)/12; //circumference in feet
     public final static int driveTimeScalar = 3;
     public final double lineColorThreshold = 0.1;
+    double darkFloorValue = 0;
+    double sideSpeed = 0.5;
     private ElapsedTime period = new ElapsedTime();
 
     /**
@@ -58,7 +60,7 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
      * @param power The speed to drive at.
      * @param distance How far the robot should travel (in feet).
      */
-    public void driveDistance(double power, double distance) {
+    public void driveDistance(double power, double distance) throws InterruptedException {
         //reset encoders just to be safe
         setAllMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -80,15 +82,11 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
         //waits for motors to finish moving
         period.reset();
         while(getAllMotorsBusy()) {
-            try {
-                //if robot has been driving longer then we think necessary we will automatically stop and move on
-                if(period.milliseconds() > Math.abs(ticks/power/driveTimeScalar)) {
-                    break;
-                }
-                idle();
-            }catch(InterruptedException e) {
-                //do nothing
+            //if robot has been driving longer then we think necessary we will automatically stop and move on
+            if(period.milliseconds() > Math.abs(ticks/power/driveTimeScalar)) {
+                break;
             }
+            idle();
         }
 
         //set all motors to 0
@@ -99,15 +97,11 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
         setAllMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void driveByTime(double power, int milliseconds) {
+    public void driveByTime(double power, int milliseconds) throws InterruptedException {
         period.reset();
         setAllDriveMotors(power);
         while(period.milliseconds() < milliseconds) {
-            try {
                 idle();
-            }catch (InterruptedException e){
-                //do nothing
-            }
         }
     }
 
@@ -115,7 +109,7 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
      * @param power The power for the motors.
      * @param degrees The degrees to turn.
      */
-    public void turnDegrees(double power, double degrees) {
+    public void turnDegrees(double power, double degrees) throws InterruptedException {
         //set to run using encoders just in case
         setAllMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -136,18 +130,14 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
 
         //if we still need to turn
         while(Math.abs(Math.abs(startHeading - robot.gyroSensor.getHeading()) - Math.abs(degrees)) > 5) {
-            try {
-                idle();
-            } catch(InterruptedException e) {
-                //do nothing
-            }
+            idle();
         }
 
         //stop all the motors
         setAllDriveMotors(0);
     }
 
-    public void driveUntilLineOrDistance(double power, double distance, double floorColor) {
+    public void driveUntilLineOrDistance(double power, double distance, double floorColor) throws InterruptedException {
         robot.lightSensor.enableLed(true);
         setAllMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -165,15 +155,11 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
         //waits for motors to finish moving
         period.reset();
         while(getAllMotorsBusy() && robot.lightSensor.getLightDetected() < floorColor + lineColorThreshold) {
-            try {
-                //if robot has been driving longer then we think necessary we will automatically stop and move on
-                if(period.milliseconds() > ticks/power/driveTimeScalar) {
-                    break;
-                }
-                idle();
-            }catch(InterruptedException e) {
-                //do nothing
+            //if robot has been driving longer then we think necessary we will automatically stop and move on
+            if(period.milliseconds() > ticks/power/driveTimeScalar) {
+                break;
             }
+            idle();
         }
 
         //set all motors to 0
@@ -201,6 +187,32 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
         double leftSpeed = Range.clip((40 + degreesToTurn * 2) / 100, -Math.abs(zTrans) / 2000, Math.abs(zTrans) / 2000);
         double rightSpeed = Range.clip((40 - degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
         setDriveMotors(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
+    }
+
+
+    public void findWhiteLine() throws InterruptedException {
+        if(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold) {
+            setDriveMotors(sideSpeed, -sideSpeed, -sideSpeed, sideSpeed);
+            time.reset();
+            while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 500) {
+                idle();
+            }
+            if(time.milliseconds() < 500){
+                setAllDriveMotors(0);
+            } else {
+                setDriveMotors(-sideSpeed, sideSpeed, sideSpeed, -sideSpeed);
+                time.reset();
+                while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 1000) {
+                    idle();
+                }
+            }
+            setAllDriveMotors(0);
+        }
+    }
+
+
+    public void getDarkFloorValue() {
+
     }
 
     /***
