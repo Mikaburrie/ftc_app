@@ -1,14 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.List;
@@ -18,11 +13,9 @@ import java.util.List;
  */
 @Autonomous(name="BIL: Blue Beacons", group="BIL")
 public class BILVuforiaBlueBeacons extends BILAutonomousCommon {
-
     VuforiaLocalizer vuforia;
     BILVuforiaCommon helper = new BILVuforiaCommon();
     BILRobotHardware robot = new BILRobotHardware();
-    ElapsedTime time = new ElapsedTime();
 
     @Override public void runOpMode() throws InterruptedException{
         this.vuforia = helper.initVuforia(false, 4);
@@ -31,10 +24,11 @@ public class BILVuforiaBlueBeacons extends BILAutonomousCommon {
         robot.init(hardwareMap);
 
         robot.lightSensor.enableLed(true);
+        robot.colorSensor.enableLed(false);
 
         Thread.sleep(50);
 
-        double darkFloorValue = robot.lightSensor.getLightDetected();
+        darkFloorValue = robot.lightSensor.getLightDetected();
         while(!isStarted()) {
             darkFloorValue = (darkFloorValue + robot.lightSensor.getLightDetected())/2;
 
@@ -54,188 +48,67 @@ public class BILVuforiaBlueBeacons extends BILAutonomousCommon {
         waitForStart();
 
 
-        setAllDriveMotors(0.5);
         driveUntilLineOrDistance(0.5, 6, darkFloorValue);
-        setAllDriveMotors(0);
         //turn 45 degrees the first 40 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
         turnDegrees(0.5, 40);
         turnDegrees(0.1, 5);
 
         targets.activate(); //activate the tracking of the image targets once the opmode starts
 
-        List<VuforiaTrackable> blueTrackablesList = helper.returnBlueTargets(targets);
+        List<VuforiaTrackable> blueTrackablesList = helper.returnRedTargets(targets);
 
-//        boolean seenImage = false;
-        boolean doneWithFirstBeacon = false;
-        boolean doneWithSecondBeacon = false;
-        boolean inFrontOfImage = false;
         VuforiaTrackable wheelsTarget = blueTrackablesList.get(0);
         VuforiaTrackable legosTarget = blueTrackablesList.get(1);
 
-        while(!doneWithFirstBeacon && opModeIsActive()){
-            OpenGLMatrix position = ((VuforiaTrackableDefaultListener) wheelsTarget.getListener()).getPose(); //get positions
-            if(position != null && !inFrontOfImage){
-                VectorF translation = position.getTranslation();
-                double xTrans = (double)translation.get(1); //x and y are switched for horizontal phone
-//                double yTrans = (double)translation.get(0);
-                double zTrans = (double)translation.get(2);
+        // Strafe one way then another looking for the white line
+        findWhiteLine();
 
-                double degreesToTurn = Math.toDegrees(Math.atan2(zTrans, xTrans)) + 90; //horizontal phone
+        // Once it's in front of the image, adjust and move forward until exactly in front of image, within x mm.
+        moveToImage(wheelsTarget, helper);
 
-                if(Math.abs(zTrans) > 250) {
-                    double leftSpeed = Range.clip((40 + degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
-                    double rightSpeed = Range.clip((40 - degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
-                    setDriveMotors(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
-                } else {
-                    inFrontOfImage = true;
-                }
-            } else if(inFrontOfImage) {
-                //push the button
-                if(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold) {
-                    setDriveMotors(-0.5, 0.5, 0.5, -0.5);
-                    time.reset();
-                    while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 500) {
-                        idle();
-                    }
-                    if(time.milliseconds() < 500) {
-                        setAllDriveMotors(0);
-                    } else {
-                        setDriveMotors(0.5, -0.5, -0.5, 0.5);
-                        time.reset();
-                        while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 1000) {
-                            idle();
-                        }
-                    }
-                    setAllDriveMotors(0);
-                }
-
-                driveDistance(0.25, 0.65);
-                if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
-                    robot.pusher.setPosition(robot.pusherRight);
-                } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
-                    robot.pusher.setPosition(robot.pusherLeft);
-                }
-                Thread.sleep(500);
-                robot.pusher.setPosition(robot.pusherMiddle);
-                inFrontOfImage = false;
-                doneWithFirstBeacon = true;
-            }
-
-            idle();
+        telemetry.addData("Red:", robot.colorSensor.red());
+        telemetry.addData("Blue:", robot.colorSensor.blue());
+        telemetry.update();
+        if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
+            robot.pusher.setPosition(robot.pusherLeft);
+        } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
+            robot.pusher.setPosition(robot.pusherRight);
         }
+        Thread.sleep(500);
+        robot.pusher.setPosition(robot.pusherMiddle);
 
-        driveByTime(-1, 250);
-        //turn 45 degrees the first 40 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
+        // Drive backwards 200 ms
+        driveByTime(-0.5, 400);
+        //turn 90 degrees the first 85 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
         turnDegrees(0.5, -85);
         turnDegrees(0.1, -5);
 
         setAllDriveMotors(0.5);
-
-        while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && opModeIsActive()) {
-            //wait for robot to run over line
-            idle();
-        }
-        setAllDriveMotors(0);
+        driveUntilLineOrDistance(0.5, 6, darkFloorValue);
         driveDistance(0.5, 0.5); //to top it off
 
         setAllDriveMotors(0);
-        //turn 45 degrees the first 40 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
+        //turn -90 degrees the first 85 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
         turnDegrees(0.5, 85);
         turnDegrees(0.1, 5);
 
-        inFrontOfImage = false;
-        while(!doneWithSecondBeacon && opModeIsActive()){
-            OpenGLMatrix position = ((VuforiaTrackableDefaultListener) legosTarget.getListener()).getPose(); //get positions
-            if(position != null && !inFrontOfImage){
-                VectorF translation = position.getTranslation();
-                double xTrans = (double)translation.get(1); //x and y are switched for horizontal phone
-//                double yTrans = (double)translation.get(0);
-                double zTrans = (double)translation.get(2);
+        //find the white line
+        findWhiteLine();
 
-                double degreesToTurn = Math.toDegrees(Math.atan2(zTrans, xTrans)) + 90; //horizontal phone
+        moveToImage(legosTarget, helper);
 
-                if(Math.abs(zTrans) > 250) {
-                    double leftSpeed = Range.clip((40 + degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
-                    double rightSpeed = Range.clip((40 - degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
-                    setDriveMotors(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
-                } else {
-                    inFrontOfImage = true;
-                }
-            } else if(inFrontOfImage) {
-                //push the button
-                if(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold) {
-                    setDriveMotors(-0.5, 0.5, 0.5, -0.5);
-                    time.reset();
-                    while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 500) {
-                        idle();
-                    }
-                    if(time.milliseconds() < 500) {
-                        setAllDriveMotors(0);
-                    } else {
-                        setDriveMotors(0.5, -0.5, -0.5, 0.5);
-                        time.reset();
-                        while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 1000) {
-                            idle();
-                        }
-                    }
-                    setAllDriveMotors(0);
-                }
-
-                driveDistance(0.25, 0.65);
-                if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
-                    robot.pusher.setPosition(robot.pusherRight);
-                } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
-                    robot.pusher.setPosition(robot.pusherLeft);
-                }
-                Thread.sleep(500);
-                robot.pusher.setPosition(robot.pusherMiddle);
-                inFrontOfImage = false;
-                doneWithSecondBeacon = true;
-            }
-
-            idle();
+        telemetry.addData("Red:", robot.colorSensor.red());
+        telemetry.addData("Blue:", robot.colorSensor.blue());
+        telemetry.update();
+        if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
+            robot.pusher.setPosition(robot.pusherLeft);
+        } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
+            robot.pusher.setPosition(robot.pusherRight);
         }
-        driveByTime(-1, 250);
+        Thread.sleep(500);
+        robot.pusher.setPosition(robot.pusherMiddle);
 
-        /*
-        seenImage = false;
-        for(VuforiaTrackable beaconImage : redTrackablesList){ //loop throught all of the trackables
-            OpenGLMatrix position = ((VuforiaTrackableDefaultListener) beaconImage.getListener()).getPose(); //get positions
-
-            if(position != null) { //if we see the object we are looking for
-                seenImage = true;
-                VectorF translation = position.getTranslation();
-                double xTrans = (double)translation.get(1); //x and y are switched for horizontal phone
-                double yTrans = (double)translation.get(0);
-                double zTrans = (double)translation.get(2);
-
-                double degreesToTurn = Math.toDegrees(Math.atan2(zTrans, xTrans)) + 90; //horizontal phone
-
-                telemetry.addData(beaconImage.getName() + " - Translation", translation);
-                telemetry.addData(beaconImage.getName() + " - Degrees", degreesToTurn);
-
-                if(Math.abs(zTrans) > 250) {
-                    double leftSpeed = Range.clip((40 + degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
-                    double rightSpeed = Range.clip((40 - degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
-                    robot.setDriveMotors(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
-                } else {
-                    robot.setAllDriveMotors(0);
-                }
-
-            } else {
-                telemetry.addData(beaconImage.getName(), "Not In View"); // if not in view it will print "Not in view"
-            }
-        }
-        if(!seenImage) {
-            //turns 45 degrees every second
-            if(time.milliseconds() > 3000){
-                robot.turnDegrees(0.25, 45);
-                time.reset();
-            }
-        }
-
-        telemetry.addData("Gyro Heading", robot.gyroSensor.getHeading());
-
-        telemetry.update();*/
+        driveByTime(-0.5, 400);
+        setAllDriveMotors(0);
     }
 }
