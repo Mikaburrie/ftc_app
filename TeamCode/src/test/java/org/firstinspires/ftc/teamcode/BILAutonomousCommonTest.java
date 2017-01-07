@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
  */
 public class BILAutonomousCommonTest {
 
-    private BILAutonomousCommon bilAutonomousCommon;
+    private BILAutonomousCommon2015 bilAutonomousCommon;
 
     @Before
     public void setUp() {
