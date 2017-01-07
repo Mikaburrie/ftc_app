@@ -32,25 +32,6 @@ public class BILVuforiaGearsPicTest extends BILAutonomousCommon {
 
         targets.activate();
 
-        boolean imageSeen = false;
-        while(!imageSeen){
-
-            VectorF translation = helper.getTargetTranslation(gearsTarget);
-
-            if(translation != null && Math.abs(translation.get(2)) > helper.targetImageDistance) {
-                helper.driveToTarget(gearsTarget, robot);
-            } else {
-                if(translation != null){
-                    telemetry.addData("Finished", "Done");
-                    setAllDriveMotors(0);
-                    imageSeen = true;
-                } else {
-                    telemetry.addData("Gears Target", "not in view");
-                }
-            }
-
-            telemetry.update();
-            idle();
-        }
+        moveToImage(gearsTarget, helper);
     }
 }

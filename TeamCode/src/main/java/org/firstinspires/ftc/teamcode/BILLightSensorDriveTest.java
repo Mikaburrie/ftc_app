@@ -31,7 +31,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
             }
 
 //            waitForStart();
-            driveUntilLineOrDistance(0.5, 5, darkFloorValue);
+            driveUntilLineOrDistance(0.5, 5);
 
 
         }
