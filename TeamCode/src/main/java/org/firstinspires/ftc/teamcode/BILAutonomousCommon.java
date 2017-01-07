@@ -3,6 +3,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 
 /**
  * Created by Mika/Alex on 12/12/2015.
@@ -185,6 +189,18 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
      */
     public boolean getAllMotorsBusy() {
         return (robot.motorFrontLeft.isBusy() || robot.motorBackLeft.isBusy() || robot.motorFrontRight.isBusy() || robot.motorBackRight.isBusy());
+    }
+
+
+    public void driveToTarget(VectorF translation){
+        double xTrans = (double)translation.get(1); //x and y are switched for horizontal phone
+        double zTrans = (double)translation.get(2);
+
+        double degreesToTurn = Math.toDegrees(Math.atan2(zTrans, xTrans)) + 90; //horizontal phone
+
+        double leftSpeed = Range.clip((40 + degreesToTurn * 2) / 100, -Math.abs(zTrans) / 2000, Math.abs(zTrans) / 2000);
+        double rightSpeed = Range.clip((40 - degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
+        setDriveMotors(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
     }
 
     /***

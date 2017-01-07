@@ -154,7 +154,10 @@ public class BILTeleOp extends OpMode {
 		}
 		*/
 		// write the values to the motors
-		robot.setDriveMotors(frontLeft, backLeft, frontRight, backRight);
+		robot.motorFrontLeft.setPower(frontLeft);
+		robot.motorBackLeft.setPower(backLeft);
+		robot.motorFrontRight.setPower(frontRight);
+		robot.motorBackRight.setPower(backRight);
 		//motorClaw.setPower(clawArmCommand);
 		/*
 		// update the position of the arm.
@@ -197,12 +200,6 @@ public class BILTeleOp extends OpMode {
 			pusherPosition = robot.pusherRight;
 		} else if(gamepad2.left_trigger > 0.5) {
 			pusherPosition = robot.pusherLeft;
-		}
-
-		if(gamepad1.left_bumper) {
-			robot.turnDegrees(1, -90);
-		} else if(gamepad1.right_bumper) {
-			robot.turnDegrees(1, 90);
 		}
 
 		robot.pusher.setPosition(pusherPosition);

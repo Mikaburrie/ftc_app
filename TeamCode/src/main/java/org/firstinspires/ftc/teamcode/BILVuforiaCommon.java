@@ -74,17 +74,4 @@ public class BILVuforiaCommon {
             return null;
         }
     }
-
-    public void driveToTarget(VuforiaTrackable target, BILRobotHardware robot){
-        VectorF translation = getTargetTranslation(target);
-        if(translation == null){return;}
-        double xTrans = (double)translation.get(1); //x and y are switched for horizontal phone
-        double zTrans = (double)translation.get(2);
-
-        double degreesToTurn = Math.toDegrees(Math.atan2(zTrans, xTrans)) + 90; //horizontal phone
-
-        double leftSpeed = Range.clip((40 + degreesToTurn * 2) / 100, -Math.abs(zTrans) / 2000, Math.abs(zTrans) / 2000);
-        double rightSpeed = Range.clip((40 - degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
-        robot.setDriveMotors(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
-    }
 }

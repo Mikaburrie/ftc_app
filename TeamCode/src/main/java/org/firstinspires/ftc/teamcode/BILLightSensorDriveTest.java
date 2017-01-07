@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  * Made by Zoha Peterson on 12/31/16.
  */
 @Autonomous(name="BIL: Light Sensor Drive Test", group="BIL")
-    public class BILLightSensorDriveTest extends LinearOpMode{
+    public class BILLightSensorDriveTest extends BILAutonomousCommon{
 
         BILRobotHardware robot = new BILRobotHardware();
 
@@ -31,7 +31,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
             }
 
 //            waitForStart();
-            robot.driveUntilLineOrDistance(0.5, 5, darkFloorValue);
+            driveUntilLineOrDistance(0.5, 5, darkFloorValue);
 
 
         }

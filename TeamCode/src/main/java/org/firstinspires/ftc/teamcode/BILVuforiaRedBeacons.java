@@ -89,7 +89,7 @@ public class BILVuforiaRedBeacons extends BILAutonomousCommon {
         while(!imageSeen){
             VectorF translation = helper.getTargetTranslation(gearsTarget);
             if(translation != null && Math.abs(translation.get(2)) > helper.targetImageDistance) { // 2 = z
-                helper.driveToTarget(gearsTarget, robot);
+                driveToTarget(translation);
             } else {
                 if(translation != null){
                     imageSeen = true;
@@ -150,7 +150,7 @@ public class BILVuforiaRedBeacons extends BILAutonomousCommon {
         while(!imageSeen){
             VectorF translation = helper.getTargetTranslation(toolsTarget);
             if (translation != null && Math.abs(translation.get(2)) > helper.targetImageDistance) {
-                helper.driveToTarget(toolsTarget, robot);
+                driveToTarget(translation);
             } else {
                 if(translation != null){
                     imageSeen = true;
