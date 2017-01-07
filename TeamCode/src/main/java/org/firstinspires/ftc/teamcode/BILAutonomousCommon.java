@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 
 /**
  * Created by Mika/Alex on 12/12/2015.
@@ -213,6 +214,28 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
 
     public void getDarkFloorValue() {
 
+    }
+
+
+    public void moveToImage(VuforiaTrackable target, BILVuforiaCommon helper) throws InterruptedException {
+        boolean inFrontOfImage = false;
+        while(!inFrontOfImage){
+            VectorF translation = helper.getTargetTranslation(target);
+            if(translation != null && Math.abs(translation.get(2)) > helper.targetImageDistance) { // 2 = z
+                driveToTarget(translation);
+                telemetry.addData("Translation X", translation.get(0));
+                telemetry.addData("Translation Y", translation.get(1));
+                telemetry.addData("Translation Z", translation.get(2));
+            } else {
+                if(translation != null){
+                    inFrontOfImage = true;
+                } else {
+                    telemetry.addData(target.getName() + " Target", "not in view");
+                }
+            }
+            telemetry.update();
+            idle();
+        }
     }
 
     /***

@@ -59,7 +59,6 @@ public class BILVuforiaRedBeacons extends BILAutonomousCommon {
 
         List<VuforiaTrackable> redTrackablesList = helper.returnRedTargets(targets);
 
-        boolean imageSeen = false;
         VuforiaTrackable toolsTarget = redTrackablesList.get(0);
         VuforiaTrackable gearsTarget = redTrackablesList.get(1);
 
@@ -67,20 +66,7 @@ public class BILVuforiaRedBeacons extends BILAutonomousCommon {
         findWhiteLine();
 
         // Once it's in front of the image, adjust and move forward until exactly in front of image, within x mm.
-        while(!imageSeen){
-            VectorF translation = helper.getTargetTranslation(gearsTarget);
-            if(translation != null && Math.abs(translation.get(2)) > helper.targetImageDistance) { // 2 = z
-                driveToTarget(translation);
-            } else {
-                if(translation != null){
-                    imageSeen = true;
-                } else {
-                    telemetry.addData("Gears Target", "not in view");
-                    telemetry.update();
-                }
-            }
-            idle();
-        }
+        moveToImage(gearsTarget, helper);
 
         telemetry.addData("Red:", robot.colorSensor.red());
         telemetry.addData("Blue:", robot.colorSensor.blue());
@@ -108,22 +94,10 @@ public class BILVuforiaRedBeacons extends BILAutonomousCommon {
         turnDegrees(0.5, -85);
         turnDegrees(0.1, -5);
 
-        imageSeen = false;
-
         //find the white line
         findWhiteLine();
 
-        while(!imageSeen){
-            VectorF translation = helper.getTargetTranslation(toolsTarget);
-            if (translation != null && Math.abs(translation.get(2)) > helper.targetImageDistance) {
-                driveToTarget(translation);
-            } else {
-                if(translation != null){
-                    imageSeen = true;
-                }
-            }
-            idle();
-        }
+        moveToImage(toolsTarget, helper);
 
         telemetry.addData("Red:", robot.colorSensor.red());
         telemetry.addData("Blue:", robot.colorSensor.blue());
