@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -18,7 +17,7 @@ import java.util.List;
  * Created by mikab_000 on 11/12/2016.
  */
 @Autonomous(name="BIL: Blue Beacons", group="BIL")
-public class BILVuforiaBlueBeacons extends LinearOpMode {
+public class BILVuforiaBlueBeacons extends BILAutonomousCommon {
 
     VuforiaLocalizer vuforia;
     BILVuforiaCommon helper = new BILVuforiaCommon();
@@ -55,12 +54,12 @@ public class BILVuforiaBlueBeacons extends LinearOpMode {
         waitForStart();
 
 
-        robot.setAllDriveMotors(0.5);
-        robot.driveUntilLineOrDistance(0.5, 6, darkFloorValue);
-        robot.setAllDriveMotors(0);
+        setAllDriveMotors(0.5);
+        driveUntilLineOrDistance(0.5, 6, darkFloorValue);
+        setAllDriveMotors(0);
         //turn 45 degrees the first 40 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
-        robot.turnDegrees(0.5, 40);
-        robot.turnDegrees(0.1, 5);
+        turnDegrees(0.5, 40);
+        turnDegrees(0.1, 5);
 
         targets.activate(); //activate the tracking of the image targets once the opmode starts
 
@@ -86,31 +85,31 @@ public class BILVuforiaBlueBeacons extends LinearOpMode {
                 if(Math.abs(zTrans) > 250) {
                     double leftSpeed = Range.clip((40 + degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
                     double rightSpeed = Range.clip((40 - degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
-                    robot.setDriveMotors(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
+                    setDriveMotors(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
                 } else {
                     inFrontOfImage = true;
                 }
             } else if(inFrontOfImage) {
                 //push the button
-                if(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold) {
-                    robot.setDriveMotors(-0.5, 0.5, 0.5, -0.5);
+                if(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold) {
+                    setDriveMotors(-0.5, 0.5, 0.5, -0.5);
                     time.reset();
-                    while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && time.milliseconds() < 500) {
+                    while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 500) {
                         idle();
                     }
                     if(time.milliseconds() < 500) {
-                        robot.setAllDriveMotors(0);
+                        setAllDriveMotors(0);
                     } else {
-                        robot.setDriveMotors(0.5, -0.5, -0.5, 0.5);
+                        setDriveMotors(0.5, -0.5, -0.5, 0.5);
                         time.reset();
-                        while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && time.milliseconds() < 1000) {
+                        while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 1000) {
                             idle();
                         }
                     }
-                    robot.setAllDriveMotors(0);
+                    setAllDriveMotors(0);
                 }
 
-                robot.driveDistance(0.25, 0.65);
+                driveDistance(0.25, 0.65);
                 if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
                     robot.pusher.setPosition(robot.pusherRight);
                 } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
@@ -125,24 +124,24 @@ public class BILVuforiaBlueBeacons extends LinearOpMode {
             idle();
         }
 
-        robot.driveByTime(-1, 250);
+        driveByTime(-1, 250);
         //turn 45 degrees the first 40 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
-        robot.turnDegrees(0.5, -85);
-        robot.turnDegrees(0.1, -5);
+        turnDegrees(0.5, -85);
+        turnDegrees(0.1, -5);
 
-        robot.setAllDriveMotors(0.5);
+        setAllDriveMotors(0.5);
 
-        while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && opModeIsActive()) {
+        while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && opModeIsActive()) {
             //wait for robot to run over line
             idle();
         }
-        robot.setAllDriveMotors(0);
-        robot.driveDistance(0.5, 0.5); //to top it off
+        setAllDriveMotors(0);
+        driveDistance(0.5, 0.5); //to top it off
 
-        robot.setAllDriveMotors(0);
+        setAllDriveMotors(0);
         //turn 45 degrees the first 40 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
-        robot.turnDegrees(0.5, 85);
-        robot.turnDegrees(0.1, 5);
+        turnDegrees(0.5, 85);
+        turnDegrees(0.1, 5);
 
         inFrontOfImage = false;
         while(!doneWithSecondBeacon && opModeIsActive()){
@@ -158,31 +157,31 @@ public class BILVuforiaBlueBeacons extends LinearOpMode {
                 if(Math.abs(zTrans) > 250) {
                     double leftSpeed = Range.clip((40 + degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
                     double rightSpeed = Range.clip((40 - degreesToTurn * 2)/100, -Math.abs(zTrans)/2000, Math.abs(zTrans)/2000);
-                    robot.setDriveMotors(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
+                    setDriveMotors(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
                 } else {
                     inFrontOfImage = true;
                 }
             } else if(inFrontOfImage) {
                 //push the button
-                if(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold) {
-                    robot.setDriveMotors(-0.5, 0.5, 0.5, -0.5);
+                if(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold) {
+                    setDriveMotors(-0.5, 0.5, 0.5, -0.5);
                     time.reset();
-                    while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && time.milliseconds() < 500) {
+                    while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 500) {
                         idle();
                     }
                     if(time.milliseconds() < 500) {
-                        robot.setAllDriveMotors(0);
+                        setAllDriveMotors(0);
                     } else {
-                        robot.setDriveMotors(0.5, -0.5, -0.5, 0.5);
+                        setDriveMotors(0.5, -0.5, -0.5, 0.5);
                         time.reset();
-                        while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && time.milliseconds() < 1000) {
+                        while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 1000) {
                             idle();
                         }
                     }
-                    robot.setAllDriveMotors(0);
+                    setAllDriveMotors(0);
                 }
 
-                robot.driveDistance(0.25, 0.65);
+                driveDistance(0.25, 0.65);
                 if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
                     robot.pusher.setPosition(robot.pusherRight);
                 } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
@@ -196,7 +195,7 @@ public class BILVuforiaBlueBeacons extends LinearOpMode {
 
             idle();
         }
-        robot.driveByTime(-1, 250);
+        driveByTime(-1, 250);
 
         /*
         seenImage = false;

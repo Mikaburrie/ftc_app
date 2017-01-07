@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * Created by nill on 11/19/15.
  */
-public class BILEncoderAutonomousRight extends BILAutonomousCommon
+public class BILEncoderAutonomousRight extends BILAutonomousCommon2015
 {
     //DcMotor motorRight;
     //DcMotor motorLeft;

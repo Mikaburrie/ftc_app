@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Created on 12/31/2016 by Mika.
  */
 @Autonomous(name="BIL: Gears Tracking Test", group="BIL")
-public class BILVuforiaGearsPicTest extends LinearOpMode {
+public class BILVuforiaGearsPicTest extends BILAutonomousCommon {
 
     VuforiaLocalizer vuforia;
     BILVuforiaCommon helper = new BILVuforiaCommon();
@@ -42,7 +42,7 @@ public class BILVuforiaGearsPicTest extends LinearOpMode {
             } else {
                 if(translation != null){
                     telemetry.addData("Finished", "Done");
-                    robot.setAllDriveMotors(0);
+                    setAllDriveMotors(0);
                     imageSeen = true;
                 } else {
                     telemetry.addData("Gears Target", "not in view");

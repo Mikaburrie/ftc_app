@@ -1,380 +1,210 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.hardware.LightSensor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.UltrasonicSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Created by Mika/Alex on 12/12/2015.
  */
-public abstract class BILAutonomousCommon extends OpMode {
+public abstract class BILAutonomousCommon extends LinearOpMode {
+    BILRobotHardware robot = new BILRobotHardware();
 
-    DcMotorController wheelController;
-    DcMotor motorRight;
-    DcMotor motorLeft;
-
-    UltrasonicSensor distanceSensor;
-    GyroSensor gyroSensor;
-    LightSensor lightSensor;
-
-    DcMotor claw;
-
-    SpeedContainer speedContainer;
-
-    int encoderTicks;
-    protected double speed = 0.5;
-    protected double gyroAdjustmentMultiplier = 0.01;
-    static final double circum = (47 / 8) * Math.PI; //Diameter times pi equals circumference
-
-    @Override
-    public void init() {
-        //motors and controllers
-        wheelController = hardwareMap.dcMotorController.get("motor control");
-        motorRight = hardwareMap.dcMotor.get("motor_2");
-        motorLeft = hardwareMap.dcMotor.get("motor_1");
-        motorLeft.setDirection(DcMotor.Direction.REVERSE);
-
-        //sight sensors
-        distanceSensor = hardwareMap.ultrasonicSensor.get("ultrasonic_1");
-        lightSensor = hardwareMap.lightSensor.get("light_sensor");
-        //gyro sensor and basic values
-        gyroSensor = hardwareMap.gyroSensor.get("gyro_1");
-        int xVal, yVal, zVal = 0;
-        int heading = 0;
-        //claw = hardwareMap.servo.get("servo_1");
-        gyroSensor.calibrate();
-        speedContainer = new SpeedContainer();
-
-    }
-
-    //
-    // setForwardDriveDistance
-    //
+    public final static int ticksPerRotation = 1440;
+    public final static double wheelCircumference = (4 * Math.PI)/12; //circumference in feet
+    public final static int driveTimeScalar = 3;
+    public final double lineColorThreshold = 0.1;
+    private ElapsedTime period = new ElapsedTime();
 
     /**
-     * Set wheel encoders to run a certain distance
+     * @param mode The run mode to set for all motors.
      */
-    public void setForwardDriveDistance(double driveDistance, double circumference)
-
-    {
-        encoderTicks = (int) (1440 * (driveDistance * 12 / circumference)); //turns drive distance to inches. Divides by circumference by drive distance to get rotations. Multiply rotations by 1440 ticks to get motor ticks.
-
-
-    } // setForwardDriveDistance
+    public void setAllMotorModes(DcMotor.RunMode mode) {
+        robot.motorFrontRight.setMode(mode);
+        robot.motorBackRight.setMode(mode);
+        robot.motorFrontLeft.setMode(mode);
+        robot.motorBackLeft.setMode(mode);
+    }
 
     /**
-     * @return distance in centimeters
+     *
+     * @param frontLeft Power for front left wheel.
+     * @param backLeft Power for back left wheel.
+     * @param frontRight Power for front right wheel.
+     * @param backRight Power for back right wheel.
      */
-    public double getDistance() {
-        return distanceSensor.getUltrasonicLevel();
+    public void setDriveMotors(double frontLeft, double backLeft, double frontRight, double backRight) {
+        robot.motorFrontLeft.setPower(frontLeft);
+        robot.motorBackLeft.setPower(backLeft);
+        robot.motorFrontRight.setPower(frontRight);
+        robot.motorBackRight.setPower(backRight);
     }
-
-    public boolean haveDriveEncodersReached() {
-        boolean haveDriveEncodersReached = false;
-        logTelemetry();
-        haveDriveEncodersReached = this.haveDriveEncodersReached(encoderTicks, encoderTicks);
-        telemetry.addData("have drive encoders reached", haveDriveEncodersReached);
-        telemetry.addData("encoder ticks", encoderTicks);
-        return haveDriveEncodersReached;
-    }
-
-    protected void logTelemetry() {
-        telemetry.addData("Light Sensor", lightSensor.toString());
-        telemetry.addData("Gyro Heading", String.format("%03d", gyroSensor.getHeading()));
-        telemetry.addData("left motor", motorLeft.getCurrentPosition());
-        telemetry.addData("right motor", motorRight.getCurrentPosition());
-        telemetry.addData("RunMode: ", motorLeft.getMode().toString());
-    }
-
-    //--------------------------------------------------------------------------
-    //
-    // haveDriveEncodersReached
-    //
 
     /**
-     * Indicate whether the drive motors' encoders have reached a value.
+     * @param power The power to set for all drive motors.
      */
-    boolean haveDriveEncodersReached(double pLeftCount, double pRightCount)
+    public void setAllDriveMotors(double power) {
+        robot.motorFrontLeft.setPower(power);
+        robot.motorBackLeft.setPower(power);
+        robot.motorFrontRight.setPower(power);
+        robot.motorBackRight.setPower(power);
+    }
 
-    {
-        boolean l_return = false;
+    /**
+     * @param power The speed to drive at.
+     * @param distance How far the robot should travel (in feet).
+     */
+    public void driveDistance(double power, double distance) {
+        //reset encoders just to be safe
+        setAllMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        //
-        // Have the encoders reached the specified values?
-        //
-        if (hasDriveEncoderReached(motorRight, pLeftCount) && hasDriveEncoderReached(motorLeft, pRightCount)) {
-            l_return = true;
-        }
+        //convert input distance in feet to motor ticks
+        int ticks = (int)Math.round(Math.abs(distance/wheelCircumference) * ticksPerRotation);
 
-        return l_return;
+        //set the target positions for all motors
+        robot.motorFrontLeft.setTargetPosition(ticks);
+        robot.motorBackLeft.setTargetPosition(ticks);
+        robot.motorFrontRight.setTargetPosition(ticks);
+        robot.motorBackRight.setTargetPosition(ticks);
 
-    } // haveDriveEncodersReached
+        //tells motors to run until position is reached
+        setAllMotorModes(DcMotor.RunMode.RUN_TO_POSITION);
 
-    //--------------------------------------------------------------------------
+        //starts the motors
+        setAllDriveMotors(power);
 
-    boolean hasDriveEncoderReached(DcMotor motorType, double p_count)
-
-    {
-        boolean lReturn = false;
-
-        if (motorType != null) {
-            //
-            // Has the encoder reached the specified values?
-            //
-            telemetry.addData("motor left current position", motorType.getCurrentPosition());
-            if (Math.abs(motorType.getCurrentPosition()) > p_count) {
-                lReturn = true;
+        //waits for motors to finish moving
+        period.reset();
+        while(getAllMotorsBusy()) {
+            try {
+                //if robot has been driving longer then we think necessary we will automatically stop and move on
+                if(period.milliseconds() > Math.abs(ticks/power/driveTimeScalar)) {
+                    break;
+                }
+                idle();
+            }catch(InterruptedException e) {
+                //do nothing
             }
         }
 
-        return lReturn;
+        //set all motors to 0
+        setAllDriveMotors(0);
 
-    } // hasLeftDriveEncoderReached
+        //resets encoder values and changes mode back to default
+        setAllMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setAllMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
 
-    //--------------------------------------------------------------------------
+    public void driveByTime(double power, int milliseconds) {
+        period.reset();
+        setAllDriveMotors(power);
+        while(period.milliseconds() < milliseconds) {
+            try {
+                idle();
+            }catch (InterruptedException e){
+                //do nothing
+            }
+        }
+    }
 
+    /**
+     * @param power The power for the motors.
+     * @param degrees The degrees to turn.
+     */
+    public void turnDegrees(double power, double degrees) {
+        //set to run using encoders just in case
+        setAllMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
 
-    boolean isLeftDriveEncoderZero()
+        //gets the current heading to refer to
+        int startHeading = robot.gyroSensor.getHeading();
+        if((startHeading + degrees) >= 360){
+            startHeading -= 360;
+        }else if(startHeading + degrees < 0) {
+            startHeading += 360;
+        }
 
-    {
-        boolean lReturn = false;
+        //if it is more efficient to turn left
+        if(degrees > 180 || degrees < 0) {
+            setDriveMotors(-power, -power, power, power);
+        } else {
+            setDriveMotors(power, power, -power, -power);
+        }
 
-        if (motorLeft != null) {
-            //
-            // Has the encoder reached the specified values?
-            //
-            telemetry.addData("motor left current position", motorLeft.getCurrentPosition());
-            if (Math.abs(motorLeft.getCurrentPosition()) < 0.1) {
-                lReturn = true;
+        //if we still need to turn
+        while(Math.abs(Math.abs(startHeading - robot.gyroSensor.getHeading()) - Math.abs(degrees)) > 5) {
+            try {
+                idle();
+            } catch(InterruptedException e) {
+                //do nothing
             }
         }
 
-        return lReturn;
-
+        //stop all the motors
+        setAllDriveMotors(0);
     }
 
-    /**
-     * Checks if drive encoder is zero,
-     * telemetry string could be "motor right current position"
-     * or "motor left current position"
-     * @param motorType
-     * @param telemetryString
-     * @return
-     */
-    boolean isDriveEncoderZero(DcMotor motorType, String telemetryString)
+    public void driveUntilLineOrDistance(double power, double distance, double floorColor) {
+        robot.lightSensor.enableLed(true);
+        setAllMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-    {
-        boolean lReturn = false;
+        int ticks = (int)Math.round((distance/wheelCircumference) * ticksPerRotation);
 
-        if (motorType != null) {
-            //
-            // Has the encoder reached the specified values?
-            //
-            telemetry.addData(telemetryString, motorRight.getCurrentPosition());
-            if (Math.abs(motorType.getCurrentPosition()) < 0.1) {
-                lReturn = true;
+        robot.motorFrontLeft.setTargetPosition(ticks);
+        robot.motorBackLeft.setTargetPosition(ticks);
+        robot.motorFrontRight.setTargetPosition(ticks);
+        robot.motorBackRight.setTargetPosition(ticks);
+
+        setAllMotorModes(DcMotor.RunMode.RUN_TO_POSITION);
+
+        setAllDriveMotors(power);
+
+        //waits for motors to finish moving
+        period.reset();
+        while(getAllMotorsBusy() && robot.lightSensor.getLightDetected() < floorColor + lineColorThreshold) {
+            try {
+                //if robot has been driving longer then we think necessary we will automatically stop and move on
+                if(period.milliseconds() > ticks/power/driveTimeScalar) {
+                    break;
+                }
+                idle();
+            }catch(InterruptedException e) {
+                //do nothing
             }
         }
 
-        return lReturn;
+        //set all motors to 0
+        setAllDriveMotors(0);
 
+        //resets encoder values and changes mode back to default
+        setAllMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setAllMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-
-   /* boolean areDriveEncodersZero()
-
-    {
-        boolean l_return = false;
-
-        //
-        // Have the encoders reached the specified values?
-        //
-        if (isRightDriveEncoderZero() && isLeftDriveEncoderZero()) {
-            l_return = true;
-        }
-
-        return l_return;
-
-    }*/
-    //--------------------------------------------------------------------------
-
-    protected void driveForward(SpeedContainer speedContainer) {
-        motorRight.setPower(speedContainer.getRightSpeed());
-        motorLeft.setPower(speedContainer.getLeftSpeed());
-    }
-
-    protected void turnLeft(SpeedContainer speedContainer) {
-        motorRight.setPower(0.0);
-        motorLeft.setPower(speedContainer.getLeftSpeed());
-    }
-
-    protected void driveBackward(SpeedContainer speedContainer) {
-        motorRight.setPower(-speedContainer.getRightSpeed());
-        motorLeft.setPower(-speedContainer.getLeftSpeed());
-    }
-
-    protected void stopDriving() {
-        motorRight.setPower(0.0);
-        motorLeft.setPower(0.0);
-    }
-
-    protected void turnRight(SpeedContainer speedContainer) {
-        motorRight.setPower(speedContainer.getRightSpeed());
-        motorLeft.setPower(0.0);
-    }
-
-    protected void driveUpRamp(double speed) {
-        motorRight.setPower(0.35);
-        motorLeft.setPower(0.35);
-
-    }
-
-    //--------------------------------------------------------------------------
-
-    //
-    // resetDriveEncoders
-    //
 
     /**
-     * Reset both drive wheel encoders.
+     * @return If one or more motors are busy return true, otherwise false.
      */
-    public void resetDriveEncoders()
-
-    {
-        resetDriveEncoder(motorRight);
-        resetDriveEncoder(motorLeft);
-
-    } // resetDriveEncoders
-
-    //--------------------------------------------------------------------------
-
-
-    /**
-     * Reset the right drive wheel encoder.
-     */
-    public void resetDriveEncoder(DcMotor motorType)
-
-    {
-
-        if (motorType != null) {
-            DcMotor.RunMode runMode = this.wheelController.getMotorMode(motorType.getPortNumber());
-            motorType.setMode(runMode.RESET_ENCODERS);
-        }
-
-    } // resetRightDriveEncoder
-
-
-    public void resetMotors() {
-
-    }
-    //--------------------------------------------------------------------------
-    //
-    // runUsingEncoders
-    //
-
-    /**
-     * Set both drive wheel encoders to run, if the mode is appropriate.
-     */
-    public void runUsingEncoders()
-
-    {
-        runUsingDriveEncoder(motorRight);
-        runUsingDriveEncoder(motorLeft);
-    } // runUsingEncoders
-    //--------------------------------------------------------------------------
-    //
-    // runUsingLeftDriveEncoder
-    //
-
-    /**
-     * Set the left drive wheel encoder to run, if the mode is appropriate.
-     */
-    public void runUsingDriveEncoder(DcMotor motorType)
-
-    {
-        if (motorType != null) {
-            DcMotor.RunMode runMode = this.wheelController.getMotorMode(motorType.getPortNumber());
-            motorType.setMode(runMode.RUN_USING_ENCODERS);
-        }
-
-    } //
-    //--------------------------------------------------------------------------
-    //
-
-
-    //--------------------------------------------------------------------------
-    //
-    // runWithoutDriveEncoders
-    //
-
-    /**
-     * Set both drive wheel encoders to run, if the mode is appropriate.
-     */
-    public void runWithoutDriveEncoders()
-
-    {
-        runWithoutDriveEncoder(motorRight);
-        runWithoutDriveEncoder(motorLeft);
-
-    } // runWithoutDriveEncoders
-    //--------------------------------------------------------------------------
-    //
-    // runWithoutLeftDriveEncoder
-    //
-
-    /**
-     * Set the left drive wheel encoder to run, if the mode is appropriate.
-     */
-    public void runWithoutDriveEncoder(DcMotor motorType)
-
-    {
-        if (motorType != null) {
-            DcMotor.RunMode runMode = this.wheelController.getMotorMode(motorType.getPortNumber());
-            if (motorType.getMode() == runMode.RESET_ENCODERS) {
-
-                motorType.setMode(runMode.RUN_WITHOUT_ENCODERS);
-            }
-        }
-
-    } //
-    //
-
-    /**
-     * Set the right drive wheel encoder to run, if the mode is appropriate.
-     */
-
-    //calculates an adjusts the speed of the robot so it can readjust the gyro path
-    protected void calculateSpeedBasedOnGyro()
-    {
-        int heading = gyroSensor.getHeading();
-        if (heading > 180) //going left
-        {
-            heading = heading - 360;
-        }
-
-        double leftSpeed = speed - heading * gyroAdjustmentMultiplier;
-        double rightSpeed = speed + heading * gyroAdjustmentMultiplier;
-        leftSpeed = enforceSpeedLimitation(leftSpeed);
-        rightSpeed = enforceSpeedLimitation(rightSpeed);
-
-        speedContainer.setLeftSpeed(leftSpeed);
-        speedContainer.setRightSpeed(rightSpeed);
+    public boolean getAllMotorsBusy() {
+        return (robot.motorFrontLeft.isBusy() || robot.motorBackLeft.isBusy() || robot.motorFrontRight.isBusy() || robot.motorBackRight.isBusy());
     }
 
-    //Protects the speed from going over 1.0 or going less than -1.0
-    protected double enforceSpeedLimitation(double initialSpeed)
-    {
-        if (initialSpeed >= 0)
-        {
-            initialSpeed = Math.min(initialSpeed, 0.99);
-        }
-        else
-        {
-            initialSpeed = Math.max(initialSpeed, -0.99);
-        }
-        return initialSpeed;
+    /***
+     *
+     * waitForTick implements a periodic delay. However, this acts like a metronome with a regular
+     * periodic tick.  This is used to compensate for varying processing times for each cycle.
+     * The function looks at the elapsed cycle time, and sleeps for the remaining time interval.
+     *
+     * @param periodMs  Length of wait cycle in mSec.
+     * @throws InterruptedException
+     */
+    public void waitForTick(long periodMs) throws InterruptedException {
+
+        long  remaining = periodMs - (long)period.milliseconds();
+
+        // sleep for the remaining portion of the regular cycle period.
+        if (remaining > 0)
+            Thread.sleep(remaining);
+
+        // Reset the cycle clock for the next pass.
+        period.reset();
     }
 }

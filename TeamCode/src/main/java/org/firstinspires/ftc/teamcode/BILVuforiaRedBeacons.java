@@ -2,28 +2,22 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * Created by mikab_000 on 11/12/2016.
  */
 @Autonomous(name="BIL: Red Beacons", group="BIL")
-public class BILVuforiaRedBeacons extends LinearOpMode {
+public class BILVuforiaRedBeacons extends BILAutonomousCommon {
 
     VuforiaLocalizer vuforia;
     BILVuforiaCommon helper = new BILVuforiaCommon();
-    BILRobotHardware robot = new BILRobotHardware();
     ElapsedTime time = new ElapsedTime();
 
     @Override public void runOpMode() throws InterruptedException{
@@ -59,10 +53,10 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         waitForStart();
 
 
-        robot.driveUntilLineOrDistance(0.5, 6, darkFloorValue);
+        driveUntilLineOrDistance(0.5, 6, darkFloorValue);
         //turn 45 degrees the first 40 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
-        robot.turnDegrees(0.5, -40);
-        robot.turnDegrees(0.1, -5);
+        turnDegrees(0.5, -40);
+        turnDegrees(0.1, -5);
 
         targets.activate(); //activate the tracking of the image targets once the opmode starts
 
@@ -73,22 +67,22 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         VuforiaTrackable gearsTarget = redTrackablesList.get(1);
 
         // Strafe one way then another looking for the white line
-        if(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold) {
-            robot.setDriveMotors(sideSpeed, -sideSpeed, -sideSpeed, sideSpeed);
+        if(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold) {
+            setDriveMotors(sideSpeed, -sideSpeed, -sideSpeed, sideSpeed);
             time.reset();
-            while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && time.milliseconds() < 500) {
+            while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 500) {
                 idle();
             }
             if(time.milliseconds() < 500){
-                robot.setAllDriveMotors(0);
+                setAllDriveMotors(0);
             } else {
-                robot.setDriveMotors(-sideSpeed, sideSpeed, sideSpeed, -sideSpeed);
+                setDriveMotors(-sideSpeed, sideSpeed, sideSpeed, -sideSpeed);
                 time.reset();
-                while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && time.milliseconds() < 1000) {
+                while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 1000) {
                     idle();
                 }
             }
-            robot.setAllDriveMotors(0);
+            setAllDriveMotors(0);
         }
 
         // Once it's in front of the image, adjust and move forward until exactly in front of image, within x mm.
@@ -119,38 +113,38 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         robot.pusher.setPosition(robot.pusherMiddle);
 
         // Drive backwards 200 ms
-        robot.driveByTime(-0.5, 400);
+        driveByTime(-0.5, 400);
         //turn 90 degrees the first 85 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
-        robot.turnDegrees(0.5, 85);
-        robot.turnDegrees(0.1, 5);
+        turnDegrees(0.5, 85);
+        turnDegrees(0.1, 5);
 
-        robot.setAllDriveMotors(0.5);
-        robot.driveUntilLineOrDistance(0.5, 6, darkFloorValue);
-        robot.driveDistance(0.5, 0.5); //to top it off
+        setAllDriveMotors(0.5);
+        driveUntilLineOrDistance(0.5, 6, darkFloorValue);
+        driveDistance(0.5, 0.5); //to top it off
 
-        robot.setAllDriveMotors(0);
+        setAllDriveMotors(0);
         //turn -90 degrees the first 85 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
-        robot.turnDegrees(0.5, -85);
-        robot.turnDegrees(0.1, -5);
+        turnDegrees(0.5, -85);
+        turnDegrees(0.1, -5);
 
         imageSeen = false;
         //push the button
-        if(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold) {
-            robot.setDriveMotors(sideSpeed, -sideSpeed, -sideSpeed, sideSpeed);
+        if(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold) {
+            setDriveMotors(sideSpeed, -sideSpeed, -sideSpeed, sideSpeed);
             time.reset();
-            while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && time.milliseconds() < 500) {
+            while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 500) {
                 idle();
             }
             if(time.milliseconds() < 500){
-                robot.setAllDriveMotors(0);
+                setAllDriveMotors(0);
             } else {
-                robot.setDriveMotors(-sideSpeed, sideSpeed, sideSpeed, -sideSpeed);
+                setDriveMotors(-sideSpeed, sideSpeed, sideSpeed, -sideSpeed);
                 time.reset();
-                while(robot.lightSensor.getLightDetected() < darkFloorValue + robot.lineColorThreshold && time.milliseconds() < 1000) {
+                while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 1000) {
                     idle();
                 }
             }
-            robot.setAllDriveMotors(0);
+            setAllDriveMotors(0);
         }
 
         while(!imageSeen){
@@ -176,7 +170,7 @@ public class BILVuforiaRedBeacons extends LinearOpMode {
         Thread.sleep(500);
         robot.pusher.setPosition(robot.pusherMiddle);
 
-        robot.driveByTime(-0.5, 400);
-        robot.setAllDriveMotors(0);
+        driveByTime(-0.5, 400);
+        setAllDriveMotors(0);
     }
 }
