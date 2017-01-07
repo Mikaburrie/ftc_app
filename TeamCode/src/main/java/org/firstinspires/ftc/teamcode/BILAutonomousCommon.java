@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 
 /**
- * Created by Mika/Alex on 12/12/2015.
+ * Created on 1/7/2017 by Mika.
  */
 public abstract class BILAutonomousCommon extends LinearOpMode {
     BILRobotHardware robot = new BILRobotHardware();
@@ -21,7 +21,6 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
     public final double lineColorThreshold = 0.1;
     double darkFloorValue = 0;
     double sideSpeed = 0.5;
-    private ElapsedTime period = new ElapsedTime();
 
     /**
      * @param mode The run mode to set for all motors.
@@ -81,10 +80,10 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
         setAllDriveMotors(power);
 
         //waits for motors to finish moving
-        period.reset();
+        time.reset();
         while(getAllMotorsBusy()) {
             //if robot has been driving longer then we think necessary we will automatically stop and move on
-            if(period.milliseconds() > Math.abs(ticks/power/driveTimeScalar)) {
+            if(time.milliseconds() > Math.abs(ticks/power/driveTimeScalar)) {
                 break;
             }
             idle();
@@ -99,9 +98,9 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
     }
 
     public void driveByTime(double power, int milliseconds) throws InterruptedException {
-        period.reset();
+        time.reset();
         setAllDriveMotors(power);
-        while(period.milliseconds() < milliseconds) {
+        while(time.milliseconds() < milliseconds) {
                 idle();
         }
     }
@@ -138,7 +137,7 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
         setAllDriveMotors(0);
     }
 
-    public void driveUntilLineOrDistance(double power, double distance, double floorColor) throws InterruptedException {
+    public void driveUntilLineOrDistance(double power, double distance) throws InterruptedException {
         robot.lightSensor.enableLed(true);
         setAllMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -154,10 +153,10 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
         setAllDriveMotors(power);
 
         //waits for motors to finish moving
-        period.reset();
-        while(getAllMotorsBusy() && robot.lightSensor.getLightDetected() < floorColor + lineColorThreshold) {
+        time.reset();
+        while(getAllMotorsBusy() && robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold) {
             //if robot has been driving longer then we think necessary we will automatically stop and move on
-            if(period.milliseconds() > ticks/power/driveTimeScalar) {
+            if(time.milliseconds() > ticks/power/driveTimeScalar) {
                 break;
             }
             idle();
@@ -169,6 +168,27 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
         //resets encoder values and changes mode back to default
         setAllMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setAllMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    /**
+     * Strafes until a line is detected or enough time has passed. Positive power goes right, negative goes left.
+     * @param power Positive goes right, negative goes left.
+     * @param milliseconds The amount of time to limit to.
+     * @throws InterruptedException
+     */
+    public void strafeUntilLineOrTime(double power, int milliseconds) throws InterruptedException {
+        robot.lightSensor.enableLed(true);
+        setAllMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //makes robot strafe right
+        setDriveMotors(power, -power, -power, power);
+
+        time.reset();
+        while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < milliseconds) {
+            idle();
+        }
+
+        setAllDriveMotors(0);
     }
 
     /**
@@ -249,13 +269,13 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
      */
     public void waitForTick(long periodMs) throws InterruptedException {
 
-        long  remaining = periodMs - (long)period.milliseconds();
+        long  remaining = periodMs - (long)time.milliseconds();
 
         // sleep for the remaining portion of the regular cycle period.
         if (remaining > 0)
             Thread.sleep(remaining);
 
         // Reset the cycle clock for the next pass.
-        period.reset();
+        time.reset();
     }
 }

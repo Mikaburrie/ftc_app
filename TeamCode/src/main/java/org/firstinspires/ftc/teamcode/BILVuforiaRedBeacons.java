@@ -1,17 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import java.util.List;
 
 /**
- * Created by mikab_000 on 11/12/2016.
+ * Created on 11/12/2016  by Mika.
  */
 @Autonomous(name="BIL: Red Beacons", group="BIL")
 public class BILVuforiaRedBeacons extends BILAutonomousCommon {
@@ -50,7 +47,7 @@ public class BILVuforiaRedBeacons extends BILAutonomousCommon {
         waitForStart();
 
 
-        driveUntilLineOrDistance(0.5, 6, darkFloorValue);
+        driveUntilLineOrDistance(0.5, 6);
         //turn 45 degrees the first 40 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
         turnDegrees(0.5, -40);
         turnDegrees(0.1, -5);
@@ -86,7 +83,7 @@ public class BILVuforiaRedBeacons extends BILAutonomousCommon {
         turnDegrees(0.1, 5);
 
         setAllDriveMotors(0.5);
-        driveUntilLineOrDistance(0.5, 6, darkFloorValue);
+        driveUntilLineOrDistance(0.5, 6);
         driveDistance(0.5, 0.5); //to top it off
 
         setAllDriveMotors(0);

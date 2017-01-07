@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import java.util.List;
 
 /**
- * Created by mikab_000 on 11/12/2016.
+ * Created on 11/12/2016 by Mika.
  */
 @Autonomous(name="BIL: Blue Beacons", group="BIL")
 public class BILVuforiaBlueBeacons extends BILAutonomousCommon {
@@ -48,7 +48,7 @@ public class BILVuforiaBlueBeacons extends BILAutonomousCommon {
         waitForStart();
 
 
-        driveUntilLineOrDistance(0.5, 6, darkFloorValue);
+        driveUntilLineOrDistance(0.5, 6);
         //turn 45 degrees the first 40 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
         turnDegrees(0.5, 40);
         turnDegrees(0.1, 5);
@@ -84,7 +84,7 @@ public class BILVuforiaBlueBeacons extends BILAutonomousCommon {
         turnDegrees(0.1, -5);
 
         setAllDriveMotors(0.5);
-        driveUntilLineOrDistance(0.5, 6, darkFloorValue);
+        driveUntilLineOrDistance(0.5, 6);
         driveDistance(0.5, 0.5); //to top it off
 
         setAllDriveMotors(0);
