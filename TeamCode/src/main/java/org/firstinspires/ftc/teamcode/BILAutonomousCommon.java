@@ -258,6 +258,34 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
         }
     }
 
+    public void driveBetweenBeacons(int turnDegrees) throws InterruptedException
+    {
+        int initialTurnDegrees, finalTurnDegrees;
+        if(turnDegrees > 0)
+        {
+            initialTurnDegrees = turnDegrees - 5;
+            finalTurnDegrees = 5;
+        }
+        else
+        {
+            initialTurnDegrees = turnDegrees + 5;
+            finalTurnDegrees = -5;
+        }
+
+        //turn 90 degrees the first 85 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
+        turnDegrees(0.5, initialTurnDegrees);
+        turnDegrees(0.1, finalTurnDegrees);
+
+        setAllDriveMotors(0.5);
+        driveUntilLineOrDistance(0.5, 6);
+        driveDistance(0.5, 0.5); //to top it off
+
+        setAllDriveMotors(0);
+        //turn -90 degrees the first 85 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
+        turnDegrees(0.5, -initialTurnDegrees);
+        turnDegrees(0.1, -finalTurnDegrees);
+    }
+
     /***
      *
      * waitForTick implements a periodic delay. However, this acts like a metronome with a regular

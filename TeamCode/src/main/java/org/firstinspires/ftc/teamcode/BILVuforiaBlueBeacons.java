@@ -79,18 +79,10 @@ public class BILVuforiaBlueBeacons extends BILAutonomousCommon {
 
         // Drive backwards 200 ms
         driveByTime(-0.5, 400);
-        //turn 90 degrees the first 85 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
-        turnDegrees(0.5, -85);
-        turnDegrees(0.1, -5);
 
-        setAllDriveMotors(0.5);
-        driveUntilLineOrDistance(0.5, 6);
-        driveDistance(0.5, 0.5); //to top it off
+        strafeUntilLineOrTime(-0.5, 2000);
 
-        setAllDriveMotors(0);
-        //turn -90 degrees the first 85 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
-        turnDegrees(0.5, 85);
-        turnDegrees(0.1, 5);
+        //driveBetweenBeacons(-90);
 
         //find the white line
         findWhiteLine();
