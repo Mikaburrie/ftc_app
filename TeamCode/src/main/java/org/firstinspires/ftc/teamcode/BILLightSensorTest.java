@@ -20,7 +20,7 @@ public class BILLightSensorTest extends LinearOpMode {
         boolean buttonDown = false;
 
         //led on or off
-        boolean ledOn = false;
+        boolean ledOn = true;
 
         //gets light sensor
         lightSensor = hardwareMap.lightSensor.get("lightSensor");
