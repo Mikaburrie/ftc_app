@@ -191,6 +191,22 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
         setAllDriveMotors(0);
     }
 
+
+    public void diagonalUntilLineOrTime(int milliseconds) throws InterruptedException {
+        robot.lightSensor.enableLed(true);
+        setAllMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //makes the robot go diagonal
+        setDriveMotors(1, 0.1, 0.1, 1);
+
+        time.reset();
+        while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < milliseconds) {
+            idle();
+        }
+
+        setAllDriveMotors(0);
+    }
+
     /**
      * @return If one or more motors are busy return true, otherwise false.
      */

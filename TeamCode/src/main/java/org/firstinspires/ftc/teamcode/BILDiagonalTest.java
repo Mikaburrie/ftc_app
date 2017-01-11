@@ -14,7 +14,7 @@ public class BILDiagonalTest extends BILAutonomousCommon {
 
         waitForStart();
 
-        setDriveMotors(0, 1, 1, 0);
+        setDriveMotors(1, 0.1, 0.1, 1);
 
         time.reset();
         while (time.milliseconds() < 2000) {
