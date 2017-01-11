@@ -18,7 +18,7 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
     public final static int ticksPerRotation = 1440;
     public final static double wheelCircumference = (4 * Math.PI)/12; //circumference in feet
     public final static int driveTimeScalar = 3;
-    public final double lineColorThreshold = 0.1;
+    public final double lineColorThreshold = 0.04;
     double darkFloorValue = 0;
     double sideSpeed = 0.5;
 
@@ -184,6 +184,11 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
         setDriveMotors(power, -power, -power, power);
 
         time.reset();
+
+        while(time.milliseconds() < 2000){
+            idle();
+        }
+
         while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < milliseconds) {
             idle();
         }

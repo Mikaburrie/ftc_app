@@ -78,7 +78,7 @@ public class BILVuforiaRedBeacons extends BILAutonomousCommon {
         Thread.sleep(500);
         robot.pusher.setPosition(robot.pusherMiddle);
 
-        // Drive backwards 200 ms
+        // Drive backwards 400 ms
         driveByTime(-0.5, 400);
 
         strafeUntilLineOrTime(0.5, 2000);
