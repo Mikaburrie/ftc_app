@@ -46,13 +46,13 @@ public class BILVuforiaRedBeacons extends BILAutonomousCommon {
 
         waitForStart();
 
-        /*
+
         driveUntilLineOrDistance(0.5, 6);
         //turn 45 degrees the first 40 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
         turnDegrees(0.5, -40);
         turnDegrees(0.1, -5);
-        */
-        diagonalUntilLineOrTime(3000);
+
+//        diagonalUntilLineOrTime(3000);
 
         targets.activate(); //activate the tracking of the image targets once the opmode starts
 
@@ -81,9 +81,9 @@ public class BILVuforiaRedBeacons extends BILAutonomousCommon {
         // Drive backwards 400 ms
         driveByTime(-0.5, 400);
 
-        strafeUntilLineOrTime(0.5, 2000);
+//        strafeUntilLineOrTime(0.5, 2000);
 
-        //driveBetweenBeacons(90);
+        driveBetweenBeacons(90);
 
         //find the white line
         findWhiteLine();
