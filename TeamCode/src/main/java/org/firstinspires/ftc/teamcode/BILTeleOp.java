@@ -44,7 +44,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Enables control of the robot via the gamepad
  */
 
-@TeleOp(name="BIL: Test Teleop", group="BIL")
+@TeleOp(name="BIL: Teleop", group="BIL")
 public class BILTeleOp extends OpMode {
 
 	BILRobotHardware robot = new BILRobotHardware(); // use the class created to define a Pushbot's hardware
@@ -54,7 +54,13 @@ public class BILTeleOp extends OpMode {
 	double backRight;
 	double backLeft;
 
+	double throttleY;
+	double throttleX;
+	double turning;
+	double liftSpeed;
+
 	boolean directionRobot = true;
+	boolean liftDeployed = false;
 	double maxSpeed = 0.7;
 	BILTeleOpJoystick bilTeleOpJoystick;
 	/**
@@ -72,39 +78,8 @@ public class BILTeleOp extends OpMode {
 	@Override
 	public void init() {
 
-
-		/*
-		 * Use the hardwareMap to get the dc motors and servos by name. Note
-		 * that the names of the devices must match the names used when you
-		 * configured your robot and created the configuration file.
-		 */
-
-		/*
-		 * For the demo Tetrix K9 bot we assume the following,
-		 *   There are two motors "motor_1" and "motor_2"
-		 *   "motor_1" is on the right side of the bot.
-		 *   "motor_2" is on the left side of the bot and reversed.
-		 *   
-		 * We also assume that there are two servos "servo_1" and "servo_6"
-		 *    "servo_1" controls the arm joint of the manipulator.
-		 *    "servo_6" controls the claw joint of the manipulator.
-		 */
-
-		//Left_Front, Left_Back, Right_Front, Right_Back
+		//Initializes all robot hardware parts
 		robot.init(hardwareMap);
-
-		//motorClaw = hardwareMap.dcMotor.get("motor_3");
-		//motorLeft.setDirection(DcMotor.Direction.REVERSE);
-
-		//hookTurner = hardwareMap.servo.get("servo_2");
-
-		//armInButton = hardwareMap.touchSensor.get("button_1");
-		//armOutButton = hardwareMap.touchSensor.get("button_2");
-
-		//distanceSensor = hardwareMap.ultrasonicSensor.get("ultrasonic_1");
-
-		// assign the starting position of the wrist and claw
-
 	}
 
 	/*
@@ -114,113 +89,22 @@ public class BILTeleOp extends OpMode {
 	 */
 	@Override
 	public void loop() {
+		getJoystickInput();
 
-		/*
-		 * Gamepad 1
-		 *
-		 * Gamepad 1 controls the motors via the left stick, and it controls the
-		 * wrist/claw via the a,b, x, y buttons
-		 */
+		scaleJoystickInput();
 
-		// throttle: left_stick_y ranges from -1 to 1, where -1 is full up, and
-		// 1 is full down
-		// direction: left_stick_x ranges from -1 to 1, where -1 is full left
-		// and 1 is full right
-		double throttleY = (double)-gamepad1.left_stick_y;
-		double throttleX = (double)gamepad1.left_stick_x;
-		double turning = (double)gamepad1.right_stick_x;
-		//float clawArmCommand = gamepad2.left_stick_y;
+		setMotorSpeeds();
 
+		setPusher();
 
-		// scale the joystick value to make it easier to control
-		// the robot more precisely at slower speeds.
-		throttleY = bilTeleOpJoystick.normalizeSpeed(throttleY, 2.0, maxSpeed);
-		throttleX = bilTeleOpJoystick.normalizeSpeed(throttleX, 2.0, maxSpeed);
-		turning = bilTeleOpJoystick.normalizeSpeed(turning, 2.0, maxSpeed);
-		//clawArmCommand = (float)bilTeleOpJoystick.normalizeSpeed(clawArmCommand, 2.0, maxSpeed);
+		getLiftDeployed();
 
-		setMeccanumMotors(throttleX, throttleY, turning);
-
-		// clip the right/left values so that the values never exceed +/- whatever you set it to
-		//clawArmCommand = Range.clip(clawArmCommand, -maxArmSpeed, maxArmSpeed * overdrive);
-		/*
-		//checks for claw arm button and keeps string from snapping
-		if(armInButton.isPressed() && -gamepad2.left_stick_y < 0){
-			clawArmCommand = 0;
-		}
-
-		if(armOutButton.isPressed() && -gamepad2.left_stick_y > 0 ){
-			clawArmCommand = 0;
-		}
-		*/
-		// write the values to the motors
-		robot.motorFrontLeft.setPower(frontLeft);
-		robot.motorBackLeft.setPower(backLeft);
-		robot.motorFrontRight.setPower(frontRight);
-		robot.motorBackRight.setPower(backRight);
-		//motorClaw.setPower(clawArmCommand);
-		/*
-		// update the position of the arm.
-		if (gamepad2.dpad_left || gamepad2.dpad_right) {
-			// if the A button is pushed on gamepad1, increment the position of
-			// the arm servo.
-			hookPosition = middle;
-		}
-		if (gamepad2.dpad_down) {
-			// if the Y button is pushed on gamepad1, decrease the position of`
-			// the arm servo.
-			hookPosition = low;
-		}
-		if (gamepad2.dpad_up) {
-			hookPosition = high;
-		}
-
-		directionRobot = gamepad1.right_trigger <= 0.90;
-
-		if (gamepad2.right_trigger > 0.90) {
-			overdrive = 2;
-		}
-		else {
-			overdrive = 1;
-		}
-
-		if (!directionRobot) {
-			motorRight.setDirection(DcMotor.Direction.REVERSE);
-			motorLeft.setDirection(DcMotor.Direction.FORWARD);
-		}
-		else {
-			motorRight.setDirection(DcMotor.Direction.FORWARD);
-			motorLeft.setDirection(DcMotor.Direction.REVERSE);
-		}
-		// write position values to the wrist and claw servo
-		hookTurner.setPosition(hookPosition);
-		*/
-		double pusherPosition = robot.pusherMiddle;
-		if(gamepad2.right_trigger > 0.5) {
-			pusherPosition = robot.pusherRight;
-		} else if(gamepad2.left_trigger > 0.5) {
-			pusherPosition = robot.pusherLeft;
-		}
-
-		robot.pusher.setPosition(pusherPosition);
-
-
-
-		/*
-		 * Send telemetry data back to driver station. Note that if we are using
-		 * a legacy NXT-compatible motor controller, then the getPower() method
-		 * will return a null value. The legacy NXT-compatible motor controllers
-		 * are currently write only.
-		 */
-		telemetry.addData("Text", "*** Robot Data***");
+		//telemetry.addData("Text", "*** Robot Data***");
 		telemetry.addData("F/R", "direction:  " + String.format("%b",directionRobot ));
 		telemetry.addData("FrontLeft Power", String.format("%.2f", frontLeft));
 		telemetry.addData("BackLeft Power", String.format("%.2f", backLeft));
 		telemetry.addData("FrontRight Power", String.format("%.2f", frontRight));
 		telemetry.addData("BackRight Power", String.format("%.2f", backRight));
-		//telemetry.addData("Fully extend arm sensor", String.format("%b", armOutButton.isPressed()));
-		//telemetry.addData("Fully in arm sensor", String.format("%b", armInButton.isPressed()));
-		//telemetry.addData("Ultrasonic value(cm)", String.format("%.2f", (float)distanceSensor.getUltrasonicLevel()));
 		telemetry.update();
 	}
 
@@ -234,7 +118,33 @@ public class BILTeleOp extends OpMode {
 
 	}
 
-	protected void setMeccanumMotors(double leftX, double leftY, double rightX) {
+	protected void getJoystickInput() {
+		// throttleY: left_stick_y ranges from -1 to 1, where -1 is full up, and
+		// 1 is full down
+		// throttleX: left_stick_x ranges from -1 to 1, where -1 is full left, and
+		// 1 is full right
+		// direction: left_stick_x ranges from -1 to 1, where -1 is full left
+		// and 1 is full right
+		throttleY = -gamepad1.left_stick_y;
+		throttleX = gamepad1.left_stick_x;
+		turning = gamepad1.right_stick_x;
+		if(liftDeployed) {
+			liftSpeed = gamepad2.left_stick_y;
+		} else {
+			liftSpeed = 0;
+		}
+	}
+
+	protected void scaleJoystickInput() {
+		// scale the joystick value to make it easier to control
+		// the robot more precisely at slower speeds.
+		throttleY = bilTeleOpJoystick.normalizeSpeed(throttleY, 2.0, maxSpeed);
+		throttleX = bilTeleOpJoystick.normalizeSpeed(throttleX, 2.0, maxSpeed);
+		turning = bilTeleOpJoystick.normalizeSpeed(turning, 2.0, maxSpeed);
+		liftSpeed = bilTeleOpJoystick.normalizeSpeed(liftSpeed, 2.0, maxSpeed)/2;
+	}
+
+	protected void getMeccanumMotorSpeeds(double leftX, double leftY, double rightX) {
 		frontRight = leftY - leftX - rightX;
 		backRight = leftY + leftX - rightX;
 		frontLeft = leftY + leftX + rightX;
@@ -244,5 +154,36 @@ public class BILTeleOp extends OpMode {
 		backRight = Range.clip(backRight, -maxSpeed, maxSpeed);
 		frontLeft = Range.clip(frontLeft, -maxSpeed, maxSpeed);
 		backLeft = Range.clip(backLeft, -maxSpeed, maxSpeed);
+	}
+
+	protected void setMotorSpeeds() {
+		getMeccanumMotorSpeeds(throttleX, throttleY, turning);
+
+		// write the values to the motors
+		robot.motorFrontLeft.setPower(frontLeft);
+		robot.motorBackLeft.setPower(backLeft);
+		robot.motorFrontRight.setPower(frontRight);
+		robot.motorBackRight.setPower(backRight);
+		robot.motorLift.setPower(liftSpeed);
+	}
+
+	protected void setPusher() {
+		double pusherPosition = robot.pusherMiddle;
+		if(gamepad2.right_trigger > 0.5) {
+			pusherPosition = robot.pusherRight;
+		} else if(gamepad2.left_trigger > 0.5) {
+			pusherPosition = robot.pusherLeft;
+		}
+
+		robot.pusher.setPosition(pusherPosition);
+	}
+
+	protected void getLiftDeployed() {
+		if(!liftDeployed) {
+			if(gamepad2.x && gamepad2.b) {
+				liftDeployed = true;
+				robot.liftHolder.setPosition(robot.liftHolderRelease);
+			}
+		}
 	}
 }

@@ -16,6 +16,7 @@ public class BILRobotHardware {
     public DcMotor motorBackRight;
     public DcMotor motorFrontLeft;
     public DcMotor motorBackLeft;
+    public DcMotor motorLift;
     public LightSensor lightSensor;
     public GyroSensor gyroSensor;
     public ColorSensor colorSensor;
@@ -23,6 +24,9 @@ public class BILRobotHardware {
     public double pusherLeft = 0.66;
     public double pusherMiddle = 0.41;
     public double pusherRight = 0.16;
+    public Servo liftHolder;
+    public double liftHolderStart = 0.5; //TODO find correct starting position
+    public double liftHolderRelease = 0.5; //TODO find correct release position
 
     /* local OpMode members. */
     HardwareMap hwMap = null;
@@ -46,8 +50,14 @@ public class BILRobotHardware {
         motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
 
+        //Lift Motor
+        motorLift = hwMap.dcMotor.get("Lift");
+
         //Initialize Servos
         pusher = hwMap.servo.get("pusher");
+        pusher.setPosition(pusherMiddle);
+        liftHolder = hwMap.servo.get("liftHolder");
+        liftHolder.setPosition(liftHolderStart);
 
         //Initialize sensors
         lightSensor = hwMap.lightSensor.get("lightSensor");
