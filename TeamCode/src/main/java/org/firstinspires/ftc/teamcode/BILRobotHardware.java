@@ -25,7 +25,7 @@ public class BILRobotHardware {
     public double pusherMiddle = 0.45;
     public double pusherRight = 0.20;
     public Servo liftHolder;
-    public double liftHolderStart = 0.45;
+    public double liftHolderStart = 0.2;
     public double liftHolderRelease = 1;
 
     /* local OpMode members. */
