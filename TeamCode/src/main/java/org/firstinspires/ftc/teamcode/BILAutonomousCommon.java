@@ -236,15 +236,15 @@ public abstract class BILAutonomousCommon extends LinearOpMode {
         if(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold) {
             setDriveMotors(sideSpeed, -sideSpeed, -sideSpeed, sideSpeed);
             time.reset();
-            while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 500) {
+            while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 1000) {
                 idle();
             }
-            if(time.milliseconds() < 500){
+            if(time.milliseconds() < 1000){
                 setAllDriveMotors(0);
             } else {
                 setDriveMotors(-sideSpeed, sideSpeed, sideSpeed, -sideSpeed);
                 time.reset();
-                while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 1000) {
+                while(robot.lightSensor.getLightDetected() < darkFloorValue + lineColorThreshold && time.milliseconds() < 2000) {
                     idle();
                 }
             }
