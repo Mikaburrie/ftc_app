@@ -53,6 +53,8 @@ public class BILVuforiaBlueBeacons extends BILAutonomousCommon {
         turnDegrees(0.5, 40);
         turnDegrees(0.1, 5);
 
+        //diagonalUntilLineOrTime(3000);
+
         targets.activate(); //activate the tracking of the image targets once the opmode starts
 
         List<VuforiaTrackable> blueTrackablesList = helper.returnRedTargets(targets);
@@ -80,9 +82,9 @@ public class BILVuforiaBlueBeacons extends BILAutonomousCommon {
         // Drive backwards 200 ms
         driveByTime(-0.5, 400);
 
-        strafeUntilLineOrTime(-0.5, 2000);
+//        strafeUntilLineOrTime(-0.5, 2000);
 
-        //driveBetweenBeacons(-90);
+        driveBetweenBeacons(-90);
 
         //find the white line
         findWhiteLine();
