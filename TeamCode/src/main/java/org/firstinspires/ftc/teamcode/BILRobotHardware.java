@@ -66,7 +66,6 @@ public class BILRobotHardware {
 
         //Initialize gyro and calibrate
         gyroSensor = hwMap.gyroSensor.get("gyro");
-        gyroSensor.calibrate();
 
         // Set all motors to zero power
         motorFrontLeft.setPower(0);

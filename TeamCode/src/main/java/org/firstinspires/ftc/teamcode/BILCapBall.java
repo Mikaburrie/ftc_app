@@ -27,6 +27,6 @@ public class BILCapBall extends BILAutonomousCommon {
             idle();
         }
 
-        driveDistance(0.5, 4);
+        driveDistance(0.5, 5);
     }
 }
