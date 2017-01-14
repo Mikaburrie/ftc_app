@@ -12,8 +12,6 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 @Autonomous(name="BIL: Cap Ball", group="BIL")
 //@Disabled
 public class BILCapBall extends BILAutonomousCommon {
-    /* Declare OpMode members. */
-    BILRobotHardware robot      = new BILRobotHardware();   // Use BIL Robot's hardware
 
     @Override
     public void runOpMode() throws InterruptedException {
