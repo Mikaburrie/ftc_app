@@ -142,6 +142,10 @@ public class BILTeleOp extends OpMode {
 		throttleX = bilTeleOpJoystick.normalizeSpeed(throttleX, 2.0, maxSpeed);
 		turning = bilTeleOpJoystick.normalizeSpeed(turning, 2.0, maxSpeed);
 		liftSpeed = bilTeleOpJoystick.normalizeSpeed(liftSpeed, 2.0, maxSpeed)/2;
+
+		if(gamepad2.a){
+			liftSpeed *= 2;
+		}
 	}
 
 	protected void getMeccanumMotorSpeeds(double leftX, double leftY, double rightX) {
