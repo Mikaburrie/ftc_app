@@ -62,6 +62,7 @@ public class BILRobotHardware {
         //Initialize sensors
         lightSensor = hwMap.lightSensor.get("lightSensor");
         colorSensor = hwMap.colorSensor.get("colorSensor");
+        colorSensor.enableLed(false);
 
         //Initialize gyro and calibrate
         gyroSensor = hwMap.gyroSensor.get("gyro");
