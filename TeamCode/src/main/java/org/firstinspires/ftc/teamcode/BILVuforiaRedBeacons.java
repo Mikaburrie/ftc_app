@@ -47,7 +47,7 @@ public class BILVuforiaRedBeacons extends BILAutonomousCommon {
         waitForStart();
 
 
-        driveUntilLineOrDistance(0.5, 6);
+        driveUntilLineOrDistance(0.5, 6.5);
         //turn 45 degrees the first 40 degrees at 0.5 speed, and to not overshoot the last 5 degrees would be 0.1 speed
         turnDegrees(0.5, -40);
         turnDegrees(0.1, -5);
@@ -75,11 +75,11 @@ public class BILVuforiaRedBeacons extends BILAutonomousCommon {
         } else if(robot.colorSensor.blue() > robot.colorSensor.red()) { //right side is red
             robot.pusher.setPosition(robot.pusherRight);
         }
-        Thread.sleep(500);
-        robot.pusher.setPosition(robot.pusherMiddle);
+        driveDistance(0.2, 0.25);
 
         // Drive backwards 400 ms
         driveByTime(-0.5, 400);
+        robot.pusher.setPosition(robot.pusherMiddle);
 
 //        strafeUntilLineOrTime(0.5, 2000);
 
@@ -98,10 +98,10 @@ public class BILVuforiaRedBeacons extends BILAutonomousCommon {
         } else if(robot.colorSensor.blue() > robot.colorSensor.red()) { //right side is red
             robot.pusher.setPosition(robot.pusherRight);
         }
-        Thread.sleep(500);
-        robot.pusher.setPosition(robot.pusherMiddle);
+        driveDistance(0.2, 0.25);
 
         driveByTime(-0.5, 400);
+        robot.pusher.setPosition(robot.pusherMiddle);
         setAllDriveMotors(0);
     }
 }
