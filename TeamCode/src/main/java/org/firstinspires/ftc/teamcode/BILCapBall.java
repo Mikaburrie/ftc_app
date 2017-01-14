@@ -24,6 +24,11 @@ public class BILCapBall extends BILAutonomousCommon {
          */
         robot.init(hardwareMap);
 
+        time.reset();
+        while(time.milliseconds() < 20000){
+            idle();
+        }
+
         driveDistance(0.5, 4);
     }
 }
