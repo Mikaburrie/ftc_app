@@ -70,9 +70,9 @@ public class BILVuforiaRedBeacons extends BILAutonomousCommon {
         telemetry.addData("Red:", robot.colorSensor.red());
         telemetry.addData("Blue:", robot.colorSensor.blue());
         telemetry.update();
-        if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
+        if(robot.colorSensor.red() > robot.colorSensor.blue()){ //left side red
             robot.pusher.setPosition(robot.pusherLeft);
-        } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
+        } else if(robot.colorSensor.blue() > robot.colorSensor.red()) { //right side is red
             robot.pusher.setPosition(robot.pusherRight);
         }
         Thread.sleep(500);
@@ -93,9 +93,9 @@ public class BILVuforiaRedBeacons extends BILAutonomousCommon {
         telemetry.addData("Red:", robot.colorSensor.red());
         telemetry.addData("Blue:", robot.colorSensor.blue());
         telemetry.update();
-        if(robot.colorSensor.red() >= helper.redBeaconColor){ //left side red
+        if(robot.colorSensor.red() > robot.colorSensor.blue()){ //left side red
             robot.pusher.setPosition(robot.pusherLeft);
-        } else if(robot.colorSensor.blue() >= helper.blueBeaconColor) { //right side is red
+        } else if(robot.colorSensor.blue() > robot.colorSensor.red()) { //right side is red
             robot.pusher.setPosition(robot.pusherRight);
         }
         Thread.sleep(500);
