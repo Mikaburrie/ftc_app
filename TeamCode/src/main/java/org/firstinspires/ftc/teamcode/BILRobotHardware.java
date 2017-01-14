@@ -21,12 +21,12 @@ public class BILRobotHardware {
     public GyroSensor gyroSensor;
     public ColorSensor colorSensor;
     public Servo pusher;
-    public double pusherLeft = 0.66;
-    public double pusherMiddle = 0.41;
-    public double pusherRight = 0.16;
+    public double pusherLeft = 0.70;
+    public double pusherMiddle = 0.45;
+    public double pusherRight = 0.20;
     public Servo liftHolder;
-    public double liftHolderStart = 0.5; //TODO find correct starting position
-    public double liftHolderRelease = 0.5; //TODO find correct release position
+    public double liftHolderStart = 0.45;
+    public double liftHolderRelease = 0.8;
 
     /* local OpMode members. */
     HardwareMap hwMap = null;
