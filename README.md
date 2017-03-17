@@ -8,7 +8,11 @@ The FTC Driver Station app is available through Google Play.
 To use this SDK, download/clone the entire project to your local computer.
 Use Android Studio to import the folder  ("Import project (Eclipse ADT, Gradle, etc.)").
 
-Documentation for the FTC SDK are included with this repository.  There is a subfolder called "doc" which contains several subfolders:
+The Javadoc reference documentation for the FTC SDK is now available online.  Visit the following URL to view the FTC SDK documentation as a live website:
+
+http://ftctechnh.github.io/ftc_app/doc/javadoc/index.html
+
+Documentation for the FTC SDK is also included with this repository.  There is a subfolder called "doc" which contains several subfolders:
 
  * The folder "apk" contains the .apk files for the FTC Driver Station and FTC Robot Controller apps.
  * The folder "javadoc" contains the JavaDoc user documentation for the FTC SDK.
@@ -18,31 +22,71 @@ For technical questions regarding the SDK, please visit the FTC Technology forum
 
   http://ftcforum.usfirst.org/forumdisplay.php?156-FTC-Technology
 
+
 **************************************************************************************
 
-##Broken Image Link Etiquette
+Version 2.4 (released on 16.11.13)
+  * Fix to avoid crashing for nonexistent resources.
+  * Blocks Programming mode changes:
+     - Added blocks to support OpenGLMatrix, MatrixF, and VectorF.
+     - Added blocks to support AngleUnit, AxesOrder, AxesReference, CameraDirection, CameraMonitorFeedback, DistanceUnit, and TempUnit.
+     - Added blocks to support Acceleration.
+     - Added blocks to support LinearOpMode.getRuntime.
+     - Added blocks to support MagneticFlux and Position.
+     - Fixed typos.
+     - Made blocks for ElapsedTime more consistent with other objects.
+     - Added blocks to support Quaternion, Velocity, Orientation, AngularVelocity.
+     - Added blocks to support VuforiaTrackables, VuforiaTrackable, VuforiaLocalizer, VuforiaTrackableDefaultListener.
+     - Fixed a few blocks.
+     - Added type checking to new blocks.
+     - Updated to latest blockly.
+     - Added default variable blocks to navigation and matrix blocks.
+     - Fixed toolbox entry for openGLMatrix_rotation_withAxesArgs.
+     - When user downloads Blocks-generated op mode, only the .blk file is downloaded.
+     - When user uploads Blocks-generated op mode (.blk file), Javascript code is auto generated.
+     - Added DbgLog support.
+     - Added logging when a blocks file is read/written.
+     - Fixed bug to properly render blocks even if missing devices from configuration file.
+     - Added support for additional characters (not just alphanumeric) for the block file names (for download and upload).
+     - Added support for OpMode flavor (“Autonomous” or “TeleOp”) and group.
+  * Changes to Samples to prevent tutorial issues.
+  * Incorporated suggested changes from public pull 216 (“Replace .. paths”).
+  * Remove Servo Glitches when robot stopped.
+  * if user hits “Cancels” when editing a configuration file, clears the unsaved changes and reverts to original unmodified configuration.
+  * Added log info to help diagnose why the Robot Controller app was terminated (for example, by watch dog function).
+  * Added ability to transfer log from the controller.
+  * Fixed inconsistency for AngularVelocity
+  * Limit unbounded growth of data for telemetry.  If user does not call telemetry.update() for LinearOpMode in a timely manner, data added for telemetry might get lost if size limit is exceeded.
 
-###Commits:
+**************************************************************************************
 
-**While writing your own commit messages, please keep in mind the following 7 commandments of git commits.**
+Version 2.35 (released on 16.10.06)
+  * Blockly programming mode - Removed unnecesary idle() call from blocks for new project.
 
-- Separate subject from body with a blank line
-- Limit the subject line to 50 characters
-- Capitalize the subject line
-- Do not end the subject line with a period
-- Use the imperative mood in the subject line
-- Wrap the body at 72 characters
-- Use the body to explain what and why vs. how
+**************************************************************************************
 
-**Before anything, please read the followint article. [Git Commit Etiquette](https://tr.im/BIL-GIT)**
-
-###New files
-
-**After your heading code (for exaple imports and package...) create a multi-line comment including your name and the date of creation of the file.*
-
-###Comments
-
-**ALWAYS use multi-line comments when comments or commented out code takes up multiple lines!**
+Version 2.30 (released on 16.10.05)
+  * Blockly programming mode:
+     - Mechanism added to save Blockly op modes from Programming Mode Server onto local device
+     - To avoid clutter, blocks are displayed in categorized folders
+     - Added support for DigitalChannel
+     - Added support for ModernRoboticsI2cCompassSensor
+     - Added support for ModernRoboticsI2cRangeSensor
+     - Added support for VoltageSensor
+     - Added support for AnalogInput
+     - Added support for AnalogOutput
+     - Fix for CompassSensor setMode block
+  * Vuforia
+     - Fix deadlock / make camera data available while Vuforia is running.
+     - Update to Vuforia 6.0.117 (recommended by Vuforia and Google to close security loophole). 
+  * Fix for autonomous 30 second timer bug (where timer was in effect, even though it appeared to have timed out).
+  * opModeIsActive changes to allow cleanup after op mode is stopped (with enforced 2 second safety timeout).
+  * Fix to avoid reading i2c twice.
+  * Updated sample Op Modes.
+  * Improved logging and fixed intermittent freezing.
+  * Added digital I/O sample.
+  * Cleaned up device names in sample op modes to be consistent with Pushbot guide.
+  * Fix to allow use of IrSeekerSensorV3.
 
 **************************************************************************************
 
@@ -162,7 +206,7 @@ Release 16.03.09
  * Added code to create log messages while waiting for LinearOpMode shutdown.
  * Fix so Wifi Direct Config activity will no longer launch multiple times.
  * Added the ability to specify an alternate i2c address in software for the Modern Robotics gyro.
-
+ 
 **************************************************************************************
 
 Release 16.02.09
@@ -246,7 +290,7 @@ Release 15.11.04.001
  * Fix to keep references stable when updating gamepad.
  * For legacy Matrix motor/servo controllers removed necessity of appending "Motor" and "Servo" to controller names.
  * Updated HT color sensor driver to use constants from ModernRoboticsUsbLegacyModule class.
- * Updated MR color sensor driver to use constants from ModernRoboticsUsbDeviceInterfaceModule class.
+ * Updated MR color sensor driver to use constants from ModernRoboticsUsbDeviceInterfaceModule class. 
  * Correctly handle I2C Address change in all color sensors
  * Updated/cleaned up op modes.
   - Updated comments in LinearI2cAddressChange.java example op mode.
@@ -261,7 +305,7 @@ Release 15.11.04.001
 
 T. Eng
 November 5, 2015
-
+ 
 **************************************************************************************
 
 Release 15.10.06.002
