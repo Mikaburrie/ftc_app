@@ -32,6 +32,24 @@ public class BILVuforiaGearsPicTest extends BILAutonomousCommon {
 
         targets.activate();
 
-        moveToImage(gearsTarget, helper);
+        //moveToImage(gearsTarget, helper);
+
+        while(true) {
+            VectorF translation = helper.getTargetTranslation(gearsTarget);
+            if (translation != null && Math.abs(translation.get(2)) > helper.targetImageDistance) { // 2 = z
+                driveToTarget(translation);
+                telemetry.addData("Translation X", translation.get(0));
+                telemetry.addData("Translation Y", translation.get(1));
+                telemetry.addData("Translation Z", translation.get(2));
+            } else {
+                if (translation != null) {
+                    setAllDriveMotors(0);
+                } else {
+                    telemetry.addData(gearsTarget.getName() + " Target", "not in view");
+                }
+            }
+            telemetry.update();
+            idle();
+        }
     }
 }
