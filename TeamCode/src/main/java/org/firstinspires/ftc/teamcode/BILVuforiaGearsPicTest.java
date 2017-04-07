@@ -34,7 +34,7 @@ public class BILVuforiaGearsPicTest extends BILAutonomousCommon {
 
         //moveToImage(gearsTarget, helper);
 
-        while(true) {
+        while(opModeIsActive()) {
             VectorF translation = helper.getTargetTranslation(gearsTarget);
             if (translation != null && Math.abs(translation.get(2)) > helper.targetImageDistance) { // 2 = z
                 driveToTarget(translation);
