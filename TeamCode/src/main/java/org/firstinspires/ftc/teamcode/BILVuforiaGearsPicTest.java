@@ -49,7 +49,7 @@ public class BILVuforiaGearsPicTest extends BILAutonomousCommon {
                 }
             }
             telemetry.update();
-            //idle();
+            //qidle();
         }
     }
 }
