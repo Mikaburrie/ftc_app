@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.robotcore.internal.VuforiaTrackablesImpl;
+//import org.firstinspires.ftc.robotcore.internal.VuforiaTrackablesImpl;
 
 import java.util.ArrayList;
 import java.util.Arrays;

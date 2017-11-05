@@ -38,7 +38,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.internal.TelemetryInternal;
+//import org.firstinspires.ftc.robotcore.internal.TelemetryInternal;
 
 import java.util.Locale;
 
@@ -64,7 +64,7 @@ public class TestTelemetry extends LinearOpMode
 
     void testNonAutoClear() throws InterruptedException
         {
-        ((TelemetryInternal)telemetry).resetTelemetryForOpMode();
+        //((TelemetryInternal)telemetry).resetTelemetryForOpMode();
 
         telemetry.setAutoClear(false);
 
@@ -96,7 +96,7 @@ public class TestTelemetry extends LinearOpMode
 
     void testLogDashboardInteraction() throws InterruptedException
         {
-        ((TelemetryInternal)telemetry).resetTelemetryForOpMode();
+        //((TelemetryInternal)telemetry).resetTelemetryForOpMode();
 
         int count = 0;
 
