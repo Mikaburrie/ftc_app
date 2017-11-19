@@ -10,11 +10,11 @@
  * can simply contain the one line:
  *
  *      apply from: '../build.common.gradle'
- *
- * which will pick up this file here. This approach allows makes it easier to integrate
- * updates to the FTC SDK into your code.
- */
 
+*
+* which will pick up this file here. This approach allows makes it easier to integrate
+* updates to the FTC SDK into your code.
+        */
 import java.util.regex.Pattern
 
 apply plugin: 'com.android.application'
@@ -99,5 +99,6 @@ repositories {
     flatDir {
         dirs rootProject.file('libs')
     }
+    maven { url 'https://maven.google.com' }
 }
 apply from: 'build.release.gradle'
